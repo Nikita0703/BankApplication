@@ -20,7 +20,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(EmailExistsException.class)
-    public ResponseEntity<Object> handleEmailExistsException(PhoneExistsException ex) {
+    public ResponseEntity<Object> handleEmailExistsException(EmailExistsException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("error", "Bad Request");
         body.put("message", ex.getMessage());
@@ -29,7 +29,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(LastEmailException.class)
-    public ResponseEntity<Object> handleLastEmailException(PhoneExistsException ex) {
+    public ResponseEntity<Object> handleLastEmailException(LastEmailException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("error", "Bad Request");
         body.put("message", ex.getMessage());
@@ -38,7 +38,7 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler(LastPhoneException.class)
-    public ResponseEntity<Object> handleLastPhoneException(PhoneExistsException ex) {
+    public ResponseEntity<Object> handleLastPhoneException(LastPhoneException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("error", "Bad Request");
         body.put("message", ex.getMessage());
