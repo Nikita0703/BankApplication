@@ -121,6 +121,13 @@ public class UserService {
                 .orElse(null);
     }
 
+    public List<User> findByFio(String fio){
+        List<User> users= userRepository.findAll();
+        return users.stream()
+                .filter(user -> user.getFio().startsWith(fio))
+                .collect(Collectors.toList());
+    }
+
 
 
 }

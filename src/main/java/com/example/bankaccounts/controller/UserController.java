@@ -66,4 +66,9 @@ public class UserController {
         return userService.findByEmail(email);
     }
 
+    @GetMapping("/fio")
+    public List<User> findByFio(@RequestParam("fio")String fio){
+        return userService.findByFio(fio);
+    }
+
 }
