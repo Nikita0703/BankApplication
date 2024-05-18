@@ -15,8 +15,10 @@ import jakarta.persistence.JoinColumn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,15 +46,11 @@ public class UserService {
     public void changePhone(String phone){
         User user = userRepository.findUserById(2L).orElse(null);
         List<Phone> phones1 = phonesRepository.findAll();
-
         List<String> phones = new ArrayList<>();
-
         for(Phone phonetemp:phones1){
             phones.add(phonetemp.getPhones());
         }
-
         user.getPhones().clear();
-
         if (phones.contains(phone)) {
             throw new PhoneExistsException("Phone with value already exists in the list.");
         }else {
@@ -64,13 +62,9 @@ public class UserService {
 
     public void changeEmail(String email){
         User user = userRepository.findUserById(2L).orElse(null);
-
         List<Email> phones1 = emailsRepository.findAll();
-
         user.getEmails().clear();
-
         List<String> phones = new ArrayList<>();
-
         for(Email phonetemp:phones1){
             phones.add(phonetemp.getEmails());
         }
@@ -103,5 +97,30 @@ public class UserService {
             userRepository.save(user);
         }
     }
+
+    public List<User> filterByBirthday(LocalDateTime birthday){
+        List<User> users= userRepository.findAll();
+        return users.stream()
+                .filter(user -> user.getBirthday().isAfter(birthday))
+                .collect(Collectors.toList());
+    }
+
+    public User findByPhone(String phone){
+        List<User> users= userRepository.findAll();
+        return users.stream()
+                .filter(user -> user.getPhones().contains(phone))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public User findByEmail(String email){
+        List<User> users= userRepository.findAll();
+        return users.stream()
+                .filter(user -> user.getEmails().contains(email))
+                .findFirst()
+                .orElse(null);
+    }
+
+
 
 }

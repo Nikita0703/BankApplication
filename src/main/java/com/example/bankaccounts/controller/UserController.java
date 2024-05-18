@@ -2,8 +2,12 @@ package com.example.bankaccounts.controller;
 
 import com.example.bankaccounts.entity.User;
 import com.example.bankaccounts.service.UserService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -47,6 +51,19 @@ public class UserController {
         userService.deleteEmail(email);
     }
 
+    @GetMapping("/birthdayFilter")
+    public List<User> filterForBirthday(@RequestParam("birthday") LocalDateTime birthday){
+        return userService.filterByBirthday(birthday);
+    }
 
+    @GetMapping("/tel")
+    public User findByTel(@RequestParam("phone")String phone){
+        return userService.findByPhone(phone);
+    }
+
+    @GetMapping("/email")
+    public User findByEmail(@RequestParam("email")String email){
+        return userService.findByEmail(email);
+    }
 
 }
