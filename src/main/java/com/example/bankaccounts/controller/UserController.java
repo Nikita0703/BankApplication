@@ -23,11 +23,6 @@ public class UserController {
     private final UserService userService;
     private final ResponseErrorValidation responseErrorValidation;
 
-    @PostMapping("/add")
-    public void saveUser(@RequestBody User user){
-        userService.createUser(user);
-    }
-
     @PutMapping("/addPhone")
     public void addPhone(@RequestParam("phone")String phone){
         userService.addTelephoneNumber(phone);

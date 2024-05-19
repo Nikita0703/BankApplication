@@ -1,5 +1,6 @@
 package com.example.bankaccounts.service;
 
+import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.Email;
 import com.example.bankaccounts.entity.Phone;
 import com.example.bankaccounts.entity.User;
@@ -13,6 +14,7 @@ import com.example.bankaccounts.repository.PhonesRepository;
 import com.example.bankaccounts.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +29,23 @@ public class UserService {
     private final UserRepository userRepository;
     private final PhonesRepository phonesRepository;
     private final EmailsRepository emailsRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    public void createUserFromDTO(UserDTO userDTO){
+        User user = new User();
+        user.setUsername(userDTO.getUsername());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setEmails(userDTO.getEmails());
+        user.setPhones(userDTO.getPhones());
+        user.setBankAccount(userDTO.getBankAccount());
+        user.setBirthday(userDTO.getBirthday());
+        user.setFio(userDTO.getFio());
+        userRepository.save(user);
+    }
 
     public void createUser(User user){
         userRepository.save(user);
     }
-
     public void addTelephoneNumber(String string){
         User user = userRepository.findUserById(1L).orElse(null);
         user.getPhones().add(string);
