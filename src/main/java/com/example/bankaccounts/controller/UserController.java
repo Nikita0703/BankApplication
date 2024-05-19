@@ -1,11 +1,18 @@
 package com.example.bankaccounts.controller;
 
 import com.example.bankaccounts.entity.User;
+import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.service.UserService;
+import com.example.bankaccounts.validation.ResponseErrorValidation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,8 +20,8 @@ import java.util.List;
 @RequestMapping("api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
-
     private final UserService userService;
+    private final ResponseErrorValidation responseErrorValidation;
 
     @PostMapping("/add")
     public void saveUser(@RequestBody User user){
@@ -69,6 +76,17 @@ public class UserController {
     @GetMapping("/fio")
     public List<User> findByFio(@RequestParam("fio")String fio){
         return userService.findByFio(fio);
+    }
+
+    @PutMapping("/transfer")
+    public ResponseEntity<Object> transfer(@Valid @RequestBody SendMoneyRequest request,
+                                           @RequestParam("id") int id,
+                                           BindingResult bindingResult)
+    {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+        userService.transferMoney(request,2);
+        return ResponseEntity.ok("Success Tranfer");
     }
 
 }

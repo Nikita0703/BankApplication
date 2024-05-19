@@ -7,6 +7,7 @@ import com.example.bankaccounts.exception.LastEmailException;
 import com.example.bankaccounts.exception.LastPhoneException;
 import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.exception.PhoneExistsException;
+import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.repository.EmailsRepository;
 import com.example.bankaccounts.repository.PhonesRepository;
 import com.example.bankaccounts.repository.UserRepository;
@@ -131,7 +132,8 @@ public class UserService {
     }
 
     @Transactional
-    public synchronized void transferMoney(int amount,int for_id){
+    public synchronized void transferMoney(SendMoneyRequest request, int for_id){
+        int amount = request.getAmount();
         User sender = userRepository.findUserById(1L).orElse(null);
         User reciever = userRepository.findUserById(2L).orElse(null);
         if (sender.getBankAccount().getSchet() - amount < 0 ) {
