@@ -4,6 +4,7 @@ import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.User;
 import com.example.bankaccounts.payload.request.LoginRequest;
 import com.example.bankaccounts.payload.response.JWTTokenSuccessResponse;
+import com.example.bankaccounts.payload.response.MessageResponse;
 import com.example.bankaccounts.security.JWTTokenProvider;
 import com.example.bankaccounts.security.SecurityConstants;
 import com.example.bankaccounts.service.UserService;
@@ -33,8 +34,11 @@ public class AuthController {
     private final JWTTokenProvider jwtTokenProvider;
 
     @PostMapping("/add")
-    public void saveUser(@RequestBody UserDTO user){
+    public ResponseEntity<Object> saveUser(@Valid @RequestBody UserDTO user,BindingResult result){
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(result);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
         userService.createUserFromDTO(user);
+        return ResponseEntity.ok(new MessageResponse("User added successfully"));
     }
 
     @PostMapping("/singin")

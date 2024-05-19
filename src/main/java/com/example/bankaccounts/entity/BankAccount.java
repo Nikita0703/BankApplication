@@ -2,6 +2,7 @@ package com.example.bankaccounts.entity;
 
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class BankAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +22,4 @@ public class BankAccount {
     @Column(nullable = false)
     private int schet;
 
- //   @PrePersist
-  //  protected void onCreate() {
-    //    this.schet = 1;
-   // }
 }

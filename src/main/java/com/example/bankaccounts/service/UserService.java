@@ -1,5 +1,6 @@
 package com.example.bankaccounts.service;
 
+import com.example.bankaccounts.dto.BankAccountDTO;
 import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.Email;
 import com.example.bankaccounts.entity.Phone;
@@ -8,6 +9,8 @@ import com.example.bankaccounts.exception.LastEmailException;
 import com.example.bankaccounts.exception.LastPhoneException;
 import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.exception.PhoneExistsException;
+import com.example.bankaccounts.mapper.BankAccountMapper;
+import com.example.bankaccounts.mapper.UserMapper;
 import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.repository.EmailsRepository;
 import com.example.bankaccounts.repository.PhonesRepository;
@@ -32,6 +35,8 @@ public class UserService {
     private final PhonesRepository phonesRepository;
     private final EmailsRepository emailsRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final BankAccountMapper bankAccountMapper;
+    private final UserMapper userMapper;
 
     public void createUserFromDTO(UserDTO userDTO){
         User user = new User();
@@ -39,7 +44,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setEmails(userDTO.getEmails());
         user.setPhones(userDTO.getPhones());
-        user.setBankAccount(userDTO.getBankAccount());
+        user.setBankAccount(bankAccountMapper.toBankAccount(userDTO.getBankAccount()));
         user.setBirthday(userDTO.getBirthday());
         user.setFio(userDTO.getFio());
         userRepository.save(user);
@@ -115,34 +120,34 @@ public class UserService {
         }
     }
 
-    public List<User> filterByBirthday(LocalDateTime birthday){
+    public List<UserDTO> filterByBirthday(LocalDateTime birthday){
         List<User> users= userRepository.findAll();
-        return users.stream()
+        return userMapper.toUserDTOList(users.stream()
                 .filter(user -> user.getBirthday().isAfter(birthday))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
-    public User findByPhone(String phone){
+    public UserDTO findByPhone(String phone){
         List<User> users= userRepository.findAll();
-        return users.stream()
+        return userMapper.toUserDTO(users.stream()
                 .filter(user -> user.getPhones().contains(phone))
                 .findFirst()
-                .orElse(null);
+                .orElse(null));
     }
 
-    public User findByEmail(String email){
+    public UserDTO findByEmail(String email){
         List<User> users= userRepository.findAll();
-        return users.stream()
+        return userMapper.toUserDTO(users.stream()
                 .filter(user -> user.getEmails().contains(email))
                 .findFirst()
-                .orElse(null);
+                .orElse(null));
     }
 
-    public List<User> findByFio(String fio){
+    public List<UserDTO> findByFio(String fio){
         List<User> users= userRepository.findAll();
-        return users.stream()
+        return userMapper.toUserDTOList(users.stream()
                 .filter(user -> user.getFio().startsWith(fio))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
     }
 
     @Transactional
