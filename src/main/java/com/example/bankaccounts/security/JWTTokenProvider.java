@@ -24,8 +24,6 @@ public class JWTTokenProvider {
         Map<String, Object> clamsMap = new HashMap<>();
         clamsMap.put("id", userId);
         clamsMap.put("username", user.getUsername());
-    //    clamsMap.put("firstName", user.getPhones());
-     //   clamsMap.put("lastName", user.getEmails());
 
         return Jwts.builder()
                 .setSubject(userId)

@@ -16,7 +16,10 @@ import com.example.bankaccounts.repository.EmailsRepository;
 import com.example.bankaccounts.repository.PhonesRepository;
 import com.example.bankaccounts.repository.UserRepository;
 
+import com.example.bankaccounts.security.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,8 @@ public class UserService {
     private final BankAccountMapper bankAccountMapper;
     private final UserMapper userMapper;
 
+    public static final Logger log = LoggerFactory.getLogger(JWTTokenProvider.class);
+
     public void createUserFromDTO(UserDTO userDTO){
         User user = new User();
         user.setUsername(userDTO.getUsername());
@@ -47,6 +52,7 @@ public class UserService {
         user.setBankAccount(bankAccountMapper.toBankAccount(userDTO.getBankAccount()));
         user.setBirthday(userDTO.getBirthday());
         user.setFio(userDTO.getFio());
+        log.info("добавлен успешно");
         userRepository.save(user);
     }
 
@@ -56,12 +62,14 @@ public class UserService {
     public void addTelephoneNumber(String string, Principal principal){
         User user = getUserByPrincipal(principal);
         user.getPhones().add(string);
+        log.info("добавлен успешно");
         userRepository.save(user);
     }
 
     public void addEmail(String string,Principal principal){
         User user = getUserByPrincipal(principal);
         user.getEmails().add(string);
+        log.info("добавлен успешно");
         userRepository.save(user);
     }
 
@@ -74,8 +82,10 @@ public class UserService {
         }
         user.getPhones().clear();
         if (phones.contains(phone)) {
+            log.warn("Phone with value already exists in the list");
             throw new PhoneExistsException("Phone with value already exists in the list.");
         }else {
+            log.info("изменен успешно");
             user.getPhones().add(phone);
             userRepository.save(user);
         }
@@ -91,8 +101,10 @@ public class UserService {
             phones.add(phonetemp.getEmails());
         }
         if (phones.contains(email)) {
-            throw new PhoneExistsException("Phone with value already exists in the list.");
+            log.warn("Email with value already exists in the list.");
+            throw new PhoneExistsException("Email with value already exists in the list.");
         }else {
+            log.info("изменен успешно");
             user.getEmails().add(email);
             userRepository.save(user);
         }
@@ -102,8 +114,10 @@ public class UserService {
         User user = getUserByPrincipal(principal);
         List<String> phones1 = user.getPhones();
         if (phones1.size() ==  1) {
+            log.warn("It is yours last phone you cuoldnt remove it");
             throw new LastPhoneException("It is yours last phone you cuoldnt remove it");
         }else {
+            log.info("Удален успешно");
             user.getPhones().removeIf(phone1 -> phone1.equals(phone));
             userRepository.save(user);
         }
@@ -113,8 +127,10 @@ public class UserService {
         User user = getUserByPrincipal(principal);
         List<String> phones1 = user.getEmails();
         if (phones1.size() ==  1) {
-            throw new LastEmailException("It is yours last phone you cuoldnt remove it");
+            log.warn("It is yours last email you cuoldnt remove it");
+            throw new LastEmailException("It is yours last email you cuoldnt remove it");
         }else {
+            log.info("Удален успешно");
             user.getEmails().removeIf(email1 -> email1.equals(email));
             userRepository.save(user);
         }
