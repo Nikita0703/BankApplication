@@ -10,7 +10,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Data
 public class SendMoneyRequest {
-    @Min(0)
+    @Min(value = 0,message = "Only more then 0")
     private int amount;
 
 }
