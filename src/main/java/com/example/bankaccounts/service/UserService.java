@@ -14,10 +14,12 @@ import com.example.bankaccounts.repository.PhonesRepository;
 import com.example.bankaccounts.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,20 +48,20 @@ public class UserService {
     public void createUser(User user){
         userRepository.save(user);
     }
-    public void addTelephoneNumber(String string){
-        User user = userRepository.findUserById(1L).orElse(null);
+    public void addTelephoneNumber(String string, Principal principal){
+        User user = getUserByPrincipal(principal);
         user.getPhones().add(string);
         userRepository.save(user);
     }
 
-    public void addEmail(String string){
-        User user = userRepository.findUserById(1L).orElse(null);
+    public void addEmail(String string,Principal principal){
+        User user = getUserByPrincipal(principal);
         user.getEmails().add(string);
         userRepository.save(user);
     }
 
-    public void changePhone(String phone){
-        User user = userRepository.findUserById(2L).orElse(null);
+    public void changePhone(String phone, Principal principal){
+        User user = getUserByPrincipal(principal);
         List<Phone> phones1 = phonesRepository.findAll();
         List<String> phones = new ArrayList<>();
         for(Phone phonetemp:phones1){
@@ -75,8 +77,8 @@ public class UserService {
 
     }
 
-    public void changeEmail(String email){
-        User user = userRepository.findUserById(2L).orElse(null);
+    public void changeEmail(String email, Principal principal){
+        User user = getUserByPrincipal(principal);
         List<Email> phones1 = emailsRepository.findAll();
         user.getEmails().clear();
         List<String> phones = new ArrayList<>();
@@ -91,8 +93,8 @@ public class UserService {
         }
     }
 
-    public void deletePhone(String phone){
-        User user = userRepository.findUserById(1L).orElse(null);
+    public void deletePhone(String phone, Principal principal){
+        User user = getUserByPrincipal(principal);
         List<String> phones1 = user.getPhones();
         if (phones1.size() ==  1) {
             throw new LastPhoneException("It is yours last phone you cuoldnt remove it");
@@ -102,8 +104,8 @@ public class UserService {
         }
     }
 
-    public void deleteEmail(String email){
-        User user = userRepository.findUserById(1L).orElse(null);
+    public void deleteEmail(String email, Principal principal){
+        User user = getUserByPrincipal(principal);
         List<String> phones1 = user.getEmails();
         if (phones1.size() ==  1) {
             throw new LastEmailException("It is yours last phone you cuoldnt remove it");
@@ -144,10 +146,10 @@ public class UserService {
     }
 
     @Transactional
-    public synchronized void transferMoney(SendMoneyRequest request, int for_id){
+    public synchronized void transferMoney(SendMoneyRequest request, Long for_id, Principal principal){
         int amount = request.getAmount();
-        User sender = userRepository.findUserById(1L).orElse(null);
-        User reciever = userRepository.findUserById(2L).orElse(null);
+        User sender = getUserByPrincipal(principal);
+        User reciever = userRepository.findUserById(for_id).orElse(null);
         if (sender.getBankAccount().getSchet() - amount < 0 ) {
             throw new NotEnoughMoneyException("It is not enough money in tours account");
         }else {
@@ -155,6 +157,12 @@ public class UserService {
             reciever.getBankAccount().setSchet(reciever.getBankAccount().getSchet() + amount);
         }
 
+    }
+
+    private User getUserByPrincipal(Principal principal) {
+        String username = principal.getName();
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found with username " + username));
     }
 
 }

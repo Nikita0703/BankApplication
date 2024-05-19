@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,33 +25,33 @@ public class UserController {
     private final ResponseErrorValidation responseErrorValidation;
 
     @PutMapping("/addPhone")
-    public void addPhone(@RequestParam("phone")String phone){
-        userService.addTelephoneNumber(phone);
+    public void addPhone(@RequestParam("phone")String phone, Principal principal){
+        userService.addTelephoneNumber(phone,principal);
     }
 
     @PutMapping("/addEmail")
-    public void addEmail(@RequestParam("email")String email){
-        userService.addEmail(email);
+    public void addEmail(@RequestParam("email")String email,Principal principal){
+        userService.addEmail(email,principal);
     }
 
     @PutMapping("/changePhone")
-    public void ChangePhone(@RequestParam("phone")String phone){
-        userService.changePhone(phone);
+    public void ChangePhone(@RequestParam("phone")String phone,Principal principal){
+        userService.changePhone(phone,principal);
     }
 
     @PutMapping("/changeEmail")
-    public void ChangeEmail(@RequestParam("email")String email){
-        userService.changeEmail(email);
+    public void ChangeEmail(@RequestParam("email")String email,Principal principal){
+        userService.changeEmail(email,principal);
     }
 
     @PutMapping("/deletePhone")
-    public void DeletePhone(@RequestParam("phone")String phone){
-        userService.deletePhone(phone);
+    public void DeletePhone(@RequestParam("phone")String phone,Principal principal){
+        userService.deletePhone(phone,principal);
     }
 
     @PutMapping("/deleteEmail")
-    public void DeleteEmail(@RequestParam("email")String email){
-        userService.deleteEmail(email);
+    public void DeleteEmail(@RequestParam("email")String email,Principal principal){
+        userService.deleteEmail(email,principal);
     }
 
     @GetMapping("/birthdayFilter")
@@ -75,12 +76,13 @@ public class UserController {
 
     @PutMapping("/transfer")
     public ResponseEntity<Object> transfer(@Valid @RequestBody SendMoneyRequest request,
-                                           @RequestParam("id") int id,
-                                           BindingResult bindingResult)
+                                           @RequestParam("id") Long id,
+                                           BindingResult bindingResult,
+                                           Principal principal)
     {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
-        userService.transferMoney(request,2);
+        userService.transferMoney(request,id,principal);
         return ResponseEntity.ok("Success Tranfer");
     }
 
