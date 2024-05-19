@@ -46,5 +46,12 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NotEnoughMoneyException.class)
+    public ResponseEntity<Object> handleNotEnoughMoneyException(NotEnoughMoneyException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("error", "Bad Request");
+        body.put("message", ex.getMessage());
 
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
 }

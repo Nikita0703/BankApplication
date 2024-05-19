@@ -5,6 +5,7 @@ import com.example.bankaccounts.entity.Phone;
 import com.example.bankaccounts.entity.User;
 import com.example.bankaccounts.exception.LastEmailException;
 import com.example.bankaccounts.exception.LastPhoneException;
+import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.exception.PhoneExistsException;
 import com.example.bankaccounts.repository.EmailsRepository;
 import com.example.bankaccounts.repository.PhonesRepository;
@@ -14,6 +15,7 @@ import jakarta.persistence.ElementCollection;
 import jakarta.persistence.JoinColumn;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -128,6 +130,17 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public synchronized void transferMoney(int amount,int for_id){
+        User sender = userRepository.findUserById(1L).orElse(null);
+        User reciever = userRepository.findUserById(2L).orElse(null);
+        if (sender.getBankAccount().getSchet() - amount < 0 ) {
+            throw new NotEnoughMoneyException("It is not enough money in tours account");
+        }else {
+            sender.getBankAccount().setSchet(sender.getBankAccount().getSchet() - amount);
+            reciever.getBankAccount().setSchet(reciever.getBankAccount().getSchet() + amount);
+        }
 
+    }
 
 }
