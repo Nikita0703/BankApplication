@@ -11,9 +11,7 @@ import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.repository.EmailsRepository;
 import com.example.bankaccounts.repository.PhonesRepository;
 import com.example.bankaccounts.repository.UserRepository;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.JoinColumn;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
