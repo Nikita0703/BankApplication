@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +30,7 @@ public class UserDTO {
     private List<String> emails = new ArrayList<>();
     @NotEmpty
     private List<String> phones = new ArrayList<>();
-    @NotEmpty
+    @NotNull
     private BankAccountDTO bankAccount;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime birthday;
