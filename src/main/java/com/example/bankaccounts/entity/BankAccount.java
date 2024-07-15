@@ -24,4 +24,6 @@ public class BankAccount {
     @Check(constraints = "schet > 0")
     private int schet;
 
+    @OneToOne(cascade = CascadeType.ALL,mappedBy = "bankAccount")
+    private User user;
 }
