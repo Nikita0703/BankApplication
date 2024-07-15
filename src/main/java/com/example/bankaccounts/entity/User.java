@@ -1,5 +1,6 @@
 package com.example.bankaccounts.entity;
 
+import com.example.bankaccounts.entity.enums.ERole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,11 @@ public class User implements UserDetails {
 
     @Column(name = "password",unique = true)
     private String password;
+
+    @ElementCollection(targetClass = ERole.class)
+    @CollectionTable(name = "user_role2",
+            joinColumns = @JoinColumn(name = "user_id"))
+    private Set<ERole> roles = new HashSet<>();
 
     @ElementCollection(targetClass = String.class)
     @CollectionTable(name = "user_emails2",

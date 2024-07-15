@@ -4,6 +4,7 @@ import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.Email;
 import com.example.bankaccounts.entity.Phone;
 import com.example.bankaccounts.entity.User;
+import com.example.bankaccounts.entity.enums.ERole;
 import com.example.bankaccounts.exception.LastEmailException;
 import com.example.bankaccounts.exception.LastPhoneException;
 import com.example.bankaccounts.exception.NotEnoughMoneyException;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +49,7 @@ public class UserServiceImpl implements UserService{
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setRoles(Collections.singleton(ERole.ROLE_USER));
         user.setEmails(userDTO.getEmails());
         user.setPhones(userDTO.getPhones());
         user.setBankAccount(bankAccountMapper.toBankAccount(userDTO.getBankAccount()));
