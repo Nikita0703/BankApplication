@@ -51,7 +51,7 @@
 
 Есть возможность при помощи внешнего апи посмотреть курс ркбля к доллару и перевести счет в доллары.
 
-В данном приложении 4 сущности: главная - user и связанные с ней Bankaccount (OneToOne),Pnone(OneToMany),Email(OneToMany).
+В данном приложении 4 сущности: главная - user и связанные с ней Bankaccount (OneToOne bi-directional),Pnone(OneToMany),Email(OneToMany).
 
 Нефункциональные:
 
