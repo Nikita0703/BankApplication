@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table(name = "users2")
+@Table( name = "users2",
+        indexes = {@Index(name = "usernameIndex",columnList = "username")})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
