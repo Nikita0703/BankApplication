@@ -13,7 +13,9 @@ import lombok.NoArgsConstructor;
 public class Email {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long user_id;
-    String emails;
+    private Long user_id;
+
+    @Column(unique = true)
+    private String emails;
 
 }
