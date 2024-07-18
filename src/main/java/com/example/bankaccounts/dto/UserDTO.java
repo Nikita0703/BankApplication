@@ -31,10 +31,6 @@ public class UserDTO {
     @NotEmpty
     private List<String> phones = new ArrayList<>();
     @NotNull
-    private BankAccountDTO bankAccount;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime birthday;
-    @NotEmpty
-    private String fio;
+    private PersonalInfoDTO personalInfoDTO;
     private Collection<? extends GrantedAuthority> authorities;
 }

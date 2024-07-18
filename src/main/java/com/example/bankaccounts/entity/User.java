@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table( name = "users2",
-        indexes = {@Index(name = "usernameIndex",columnList = "username")})
+@Table( name = "users6",
+        indexes = {@Index(name = "usernameIndex3",columnList = "username")})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,17 +34,17 @@ public class User implements UserDetails {
     private String password;
 
     @ElementCollection(targetClass = ERole.class)
-    @CollectionTable(name = "user_role2",
+    @CollectionTable(name = "user_role6",
             joinColumns = @JoinColumn(name = "user_id"))
     private Set<ERole> roles = new HashSet<>();
 
     @ElementCollection(targetClass = String.class)
-    @CollectionTable(name = "user_emails2",
+    @CollectionTable(name = "user_emails6",
             joinColumns = @JoinColumn(name = "user_id"))
-    private List<String> emails = new ArrayList<>();
+    private List<String> emails= new ArrayList<>();
 
     @ElementCollection(targetClass = String.class)
-    @CollectionTable(name = "user_phones2",
+    @CollectionTable(name = "user_phones6",
             joinColumns = @JoinColumn(name = "user_id"))
     private List<String> phones = new ArrayList<>();
 
@@ -52,12 +52,9 @@ public class User implements UserDetails {
     @JoinColumn(name = "bankAccount_id")
     private BankAccount bankAccount;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Column(updatable = false)
-    private LocalDateTime birthday;
-
-    @Column(nullable = false)
-    private String fio;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "personalInfo_id")
+    private PersonalInfo personalInfo;
 
     @Transient
     private Collection<? extends GrantedAuthority> authorities;

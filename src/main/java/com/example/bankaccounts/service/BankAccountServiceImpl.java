@@ -29,13 +29,13 @@ public class BankAccountServiceImpl implements BankAccountService {
         double maxInterestRate = 2.07;
 
         for (User user : users) {
-            initialDeposite.add(user.getBankAccount().getSchet());
+            initialDeposite.add((int) user.getBankAccount().getCard().getBalance());
         }
 
         int i = 0;
         for (User user : users) {
-            if (user.getBankAccount().getSchet() * interestRate < initialDeposite.get(i) * maxInterestRate) {
-                user.getBankAccount().setSchet((int) ((int) user.getBankAccount().getSchet() * interestRate));
+            if (user.getBankAccount().getCard().getBalance() * interestRate < initialDeposite.get(i) * maxInterestRate) {
+                user.getBankAccount().getCard().setBalance((int) ((int) user.getBankAccount().getCard().getBalance() * interestRate));
                 userService.createUser(user);
                 log.info("Увеличен на 5%");
             }

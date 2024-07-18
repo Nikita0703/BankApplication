@@ -1,6 +1,7 @@
 package com.example.bankaccounts.service;
 
 import com.example.bankaccounts.dto.UserDTO;
+import com.example.bankaccounts.entity.BankAccount;
 import com.example.bankaccounts.entity.Email;
 import com.example.bankaccounts.entity.Phone;
 import com.example.bankaccounts.entity.User;
@@ -10,6 +11,7 @@ import com.example.bankaccounts.exception.LastPhoneException;
 import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.exception.PhoneExistsException;
 import com.example.bankaccounts.mapper.BankAccountMapper;
+import com.example.bankaccounts.mapper.PersonalInfoMapper;
 import com.example.bankaccounts.mapper.UserMapper;
 import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.repository.EmailsRepository;
@@ -41,6 +43,7 @@ public class UserServiceImpl implements UserService{
     private final BCryptPasswordEncoder passwordEncoder;
     private final BankAccountMapper bankAccountMapper;
     private final UserMapper userMapper;
+    private final PersonalInfoMapper personalInfoMapper;
 
     public static final Logger log = LoggerFactory.getLogger(JWTTokenProvider.class);
 
@@ -52,9 +55,8 @@ public class UserServiceImpl implements UserService{
         user.setRoles(Collections.singleton(ERole.ROLE_USER));
         user.setEmails(userDTO.getEmails());
         user.setPhones(userDTO.getPhones());
-        user.setBankAccount(bankAccountMapper.toBankAccount(userDTO.getBankAccount()));
-        user.setBirthday(userDTO.getBirthday());
-        user.setFio(userDTO.getFio());
+        user.setBankAccount(new BankAccount());
+        user.setPersonalInfo(personalInfoMapper.toPersonalInfo(userDTO.getPersonalInfoDTO()));
         log.info("добавлен успешно");
         userRepository.save(user);
     }
@@ -151,7 +153,7 @@ public class UserServiceImpl implements UserService{
     public List<UserDTO> filterByBirthday(LocalDateTime birthday){
         List<User> users= userRepository.findAll();
         return userMapper.toUserDTOList(users.stream()
-                .filter(user -> user.getBirthday().isAfter(birthday))
+                .filter(user -> user.getPersonalInfo().getBirthday().isAfter(birthday))
                 .collect(Collectors.toList()));
     }
 
@@ -177,7 +179,7 @@ public class UserServiceImpl implements UserService{
     public List<UserDTO> findByFio(String fio){
         List<User> users= userRepository.findAll();
         return userMapper.toUserDTOList(users.stream()
-                .filter(user -> user.getFio().startsWith(fio))
+                .filter(user -> user.getPersonalInfo().getFio().startsWith(fio))
                 .collect(Collectors.toList()));
     }
 
@@ -187,11 +189,11 @@ public class UserServiceImpl implements UserService{
         int amount = request.getAmount();
         User sender = getUserByPrincipal(principal);
         User reciever = userRepository.findUserById(for_id).orElse(null);
-        if (sender.getBankAccount().getSchet() - amount < 0 ) {
+        if (sender.getBankAccount().getCard().getBalance() - amount < 0 ) {
             throw new NotEnoughMoneyException("It is not enough money in tours account");
         }else {
-            sender.getBankAccount().setSchet(sender.getBankAccount().getSchet() - amount);
-            reciever.getBankAccount().setSchet(reciever.getBankAccount().getSchet() + amount);
+            sender.getBankAccount().getCard().setBalance(sender.getBankAccount().getCard().getBalance() - amount);
+            reciever.getBankAccount().getCard().setBalance(reciever.getBankAccount().getCard().getBalance() + amount);
         }
 
     }

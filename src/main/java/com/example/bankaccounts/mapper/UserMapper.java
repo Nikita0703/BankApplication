@@ -1,8 +1,10 @@
 package com.example.bankaccounts.mapper;
 
 import com.example.bankaccounts.dto.BankAccountDTO;
+import com.example.bankaccounts.dto.PersonalInfoDTO;
 import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.BankAccount;
+import com.example.bankaccounts.entity.PersonalInfo;
 import com.example.bankaccounts.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,33 +16,32 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserMapper {
     private final BankAccountMapper bankAccountMapper;
+    private final PersonalInfoMapper personalInfoMapper;
 
     public User toUser(UserDTO userDTO){
-        BankAccount bankAccount = bankAccountMapper.toBankAccount(userDTO.getBankAccount());
+       // BankAccount bankAccount = bankAccountMapper.toBankAccount(userDTO.getBankAccount());
+        PersonalInfo personalInfo = personalInfoMapper.toPersonalInfo(userDTO.getPersonalInfoDTO());
         User user = User.builder().
                 id(userDTO.getId())
                 .username(userDTO.getUsername())
                 .password(userDTO.getPassword())
                 .emails(userDTO.getEmails())
                 .phones(userDTO.getPhones())
-                .bankAccount(bankAccount)
-                .birthday(userDTO.getBirthday())
-                .fio(userDTO.getFio())
+                .personalInfo(personalInfo)
                 .build();
         return user;
     }
 
     public UserDTO toUserDTO(User user){
-        BankAccountDTO bankAccount = bankAccountMapper.toBankAccountDTO(user.getBankAccount());
+      //  BankAccountDTO bankAccount = bankAccountMapper.toBankAccountDTO(user.getBankAccount());
+        PersonalInfoDTO personalInfoDTO = personalInfoMapper.toPersonalInfoDTO(user.getPersonalInfo());
         UserDTO userDTO = UserDTO.builder().
                 id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .emails(user.getEmails())
                 .phones(user.getPhones())
-                .bankAccount(bankAccount)
-                .birthday(user.getBirthday())
-                .fio(user.getFio())
+                .personalInfoDTO(personalInfoDTO)
                 .build();
         return userDTO;
     }

@@ -1,0 +1,45 @@
+package com.example.bankaccounts.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Check;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "card6")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Card {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(nullable = false)
+    private String cardNumber;
+
+    @Column(nullable = false)
+    private String cardHolderName;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(updatable = false)
+    private LocalDateTime expirationDate;
+
+    @Column(nullable = false)
+    private int cvv;
+
+    @Column(nullable = false)
+    @Check(constraints = "balance > 0")
+    private double balance;
+
+    @Column(nullable = false,columnDefinition = "boolean default true")
+    private boolean isActive;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bankAccount_id")
+    private BankAccount bankAccount;
+}

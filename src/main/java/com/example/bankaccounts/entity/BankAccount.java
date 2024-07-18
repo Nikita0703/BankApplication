@@ -6,11 +6,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "bankAccounts2")
+@Table(name = "bank_Accounts6")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,12 +21,26 @@ import java.time.LocalDateTime;
 public class BankAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
-    @Column(nullable = false)
-    @Check(constraints = "schet > 0")
-    private int schet;
+    @Column(nullable = false,unique = true)
+    private int UUID;
 
-    @OneToOne(cascade = CascadeType.ALL,mappedBy = "bankAccount")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(updatable = false)
+    private LocalDateTime creationDate;
+
+    @OneToOne(mappedBy = "bankAccount",cascade = CascadeType.ALL)
     private User user;
+
+    @OneToOne(mappedBy = "bankAccount",cascade = CascadeType.ALL)
+    private Deposite deposite;
+
+    @OneToOne(mappedBy = "bankAccount",cascade = CascadeType.ALL)
+    private Card card;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "employee_id")
+    private List<HistoryItem> pets= new ArrayList<>();
+
 }
