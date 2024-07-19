@@ -12,9 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -27,10 +25,11 @@ public class UserDTO {
     @NotEmpty
     private String password;
     @NotEmpty
-    private List<String> emails = new ArrayList<>();
+    private Set<String> emails = new HashSet<>();
     @NotEmpty
-    private List<String> phones = new ArrayList<>();
+    private Set<String> phones = new HashSet<>();
     @NotNull
     private PersonalInfoDTO personalInfoDTO;
+    private BankAccountDTO bankAccountDTO;
     private Collection<? extends GrantedAuthority> authorities;
 }

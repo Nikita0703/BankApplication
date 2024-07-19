@@ -18,8 +18,8 @@ public class UserMapper {
     private final BankAccountMapper bankAccountMapper;
     private final PersonalInfoMapper personalInfoMapper;
 
-    public User toUser(UserDTO userDTO){
-       // BankAccount bankAccount = bankAccountMapper.toBankAccount(userDTO.getBankAccount());
+    public User toUserFull(UserDTO userDTO){
+        BankAccount bankAccount = bankAccountMapper.toBankAccount(userDTO.getBankAccountDTO());
         PersonalInfo personalInfo = personalInfoMapper.toPersonalInfo(userDTO.getPersonalInfoDTO());
         User user = User.builder().
                 id(userDTO.getId())
@@ -28,12 +28,44 @@ public class UserMapper {
                 .emails(userDTO.getEmails())
                 .phones(userDTO.getPhones())
                 .personalInfo(personalInfo)
+                .bankAccount(bankAccount)
                 .build();
         return user;
     }
 
+  //  public Us
+    public UserDTO toUserDTOFull(User user){
+        BankAccountDTO bankAccountDTO = bankAccountMapper.toBankAccountDTO(user.getBankAccount());
+        PersonalInfoDTO personalInfoDTO = personalInfoMapper.toPersonalInfoDTO(user.getPersonalInfo());
+        UserDTO userDTO = UserDTO.builder().
+                id(user.getId())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .emails(user.getEmails())
+                .phones(user.getPhones())
+                .personalInfoDTO(personalInfoDTO)
+                .bankAccountDTO(bankAccountDTO)
+                .build();
+        return userDTO;
+    }
+
+    public List<User> toUserList(List<UserDTO> dtoList){
+        List<User> list = new ArrayList<>();
+        for (UserDTO dto:dtoList){
+            list.add(toUserFull(dto));
+        }
+        return list;
+    }
+
+    public List<UserDTO> toUserDTOList(List<User> list){
+        List<UserDTO> listDTO = new ArrayList<>();
+        for (User user:list){
+            listDTO.add(toUserDTOFull(user));
+        }
+        return listDTO;
+    }
+
     public UserDTO toUserDTO(User user){
-      //  BankAccountDTO bankAccount = bankAccountMapper.toBankAccountDTO(user.getBankAccount());
         PersonalInfoDTO personalInfoDTO = personalInfoMapper.toPersonalInfoDTO(user.getPersonalInfo());
         UserDTO userDTO = UserDTO.builder().
                 id(user.getId())
@@ -44,22 +76,6 @@ public class UserMapper {
                 .personalInfoDTO(personalInfoDTO)
                 .build();
         return userDTO;
-    }
-
-    public List<User> toUserList(List<UserDTO> dtoList){
-        List<User> list = new ArrayList<>();
-        for (UserDTO dto:dtoList){
-            list.add(toUser(dto));
-        }
-        return list;
-    }
-
-    public List<UserDTO> toUserDTOList(List<User> list){
-        List<UserDTO> listDTO = new ArrayList<>();
-        for (User user:list){
-            listDTO.add(toUserDTO(user));
-        }
-        return listDTO;
     }
 
 }

@@ -1,6 +1,11 @@
 package com.example.bankaccounts.service;
 
+import com.example.bankaccounts.dto.BankAccountDTO;
+import com.example.bankaccounts.dto.UserDTO;
+import com.example.bankaccounts.entity.BankAccount;
 import com.example.bankaccounts.entity.User;
+import com.example.bankaccounts.mapper.BankAccountMapper;
+import com.example.bankaccounts.repository.BankAccountRepository;
 import com.example.bankaccounts.repository.UserRepository;
 import com.example.bankaccounts.security.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -11,14 +16,17 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BankAccountServiceImpl implements BankAccountService {
     public static final Logger log = LoggerFactory.getLogger(JWTTokenProvider.class);
 
+    private final BankAccountRepository bankAccountRepository;
     private final UserRepository userRepository;
-    private final UserServiceImpl userService;
+    private final BankAccountMapper bankAccountMapper;
+   // private final UserServiceImpl userService;
 
     @Override
     @Scheduled(fixedRate = 60000)
@@ -32,15 +40,22 @@ public class BankAccountServiceImpl implements BankAccountService {
             initialDeposite.add((int) user.getBankAccount().getCard().getBalance());
         }
 
-        int i = 0;
+       int i = 0;
         for (User user : users) {
-            if (user.getBankAccount().getCard().getBalance() * interestRate < initialDeposite.get(i) * maxInterestRate) {
-                user.getBankAccount().getCard().setBalance((int) ((int) user.getBankAccount().getCard().getBalance() * interestRate));
-                userService.createUser(user);
-                log.info("Увеличен на 5%");
+           // if (user.getBankAccount().getCard().getBalance() * interestRate < initialDeposite.get(i) * maxInterestRate) {
+             //   user.getBankAccount().getCard().setBalance((int) ((int) user.getBankAccount().getCard().getBalance() * interestRate));
+            //    userService.createUser(user);
+            //    log.info("Увеличен на 5%");
             }
-            i++;
-        }
+           // i++;
+       // }
 
-    }
+   }
+
+   public UserDTO getUserByAccount(int id){
+        BankAccount bankAccount = bankAccountRepository.findById(id).orElse(null);;
+        BankAccountDTO bankAccountDTO = bankAccountMapper.toBankAccountDTOFull(bankAccount);
+        return bankAccountDTO.getUser();
+   }
+
 }

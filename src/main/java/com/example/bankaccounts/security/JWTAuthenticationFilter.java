@@ -1,6 +1,8 @@
 package com.example.bankaccounts.security;
 
 
+import com.example.bankaccounts.dto.UserDTO;
+import com.example.bankaccounts.payload.CustomPrincipal;
 import com.example.bankaccounts.service.CustomUserDetailsService;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             String jwt = getJWTFromRequest(httpServletRequest);
             if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
                 Long userId = jwtTokenProvider.getUserIdFromToken(jwt);
+
                 User userDetails = customUserDetailsService.loadUserById(userId);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

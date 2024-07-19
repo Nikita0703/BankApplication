@@ -14,6 +14,7 @@ import com.example.bankaccounts.mapper.BankAccountMapper;
 import com.example.bankaccounts.mapper.PersonalInfoMapper;
 import com.example.bankaccounts.mapper.UserMapper;
 import com.example.bankaccounts.payload.request.SendMoneyRequest;
+import com.example.bankaccounts.repository.BankAccountRepository;
 import com.example.bankaccounts.repository.EmailsRepository;
 import com.example.bankaccounts.repository.PhonesRepository;
 import com.example.bankaccounts.repository.UserRepository;
@@ -29,9 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,23 +39,34 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final PhonesRepository phonesRepository;
     private final EmailsRepository emailsRepository;
+    private final BankAccountRepository bankAccountRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final BankAccountMapper bankAccountMapper;
     private final UserMapper userMapper;
     private final PersonalInfoMapper personalInfoMapper;
+    private final BankAccountServiceImpl bankAccountService;
 
     public static final Logger log = LoggerFactory.getLogger(JWTTokenProvider.class);
 
     @Override
+    @Transactional
     public void createUserFromDTO(UserDTO userDTO){
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        user.setRoles(Collections.singleton(ERole.ROLE_USER));
+        //user.setRoles(Collections.singleton(ERole.ROLE_USER));
+        user.getRoles().add(ERole.ROLE_USER);
         user.setEmails(userDTO.getEmails());
         user.setPhones(userDTO.getPhones());
-        user.setBankAccount(new BankAccount());
+        BankAccount bankAccount = new BankAccount();
+        Random rand = new Random();
+        int ID = rand.nextInt(10000) + 1;
+        bankAccount.setIdenticalNumber(ID);
+        bankAccount.setCreationDate(LocalDateTime.now());
+        user.setBankAccount(bankAccount);
         user.setPersonalInfo(personalInfoMapper.toPersonalInfo(userDTO.getPersonalInfoDTO()));
+        bankAccount.setUser(user);
+        bankAccountRepository.save(bankAccount);
         log.info("добавлен успешно");
         userRepository.save(user);
     }
@@ -66,11 +76,13 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
 
-    @Override
+   // @Override
+    @Transactional
     public void addTelephoneNumber(String string, Principal principal){
         User user = getUserByPrincipal(principal);
         user.getPhones().add(string);
         log.info("добавлен успешно");
+       // userRepository.save(userMapper.toUser(user));
         userRepository.save(user);
     }
 
@@ -124,7 +136,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deletePhone(String phone, Principal principal){
         User user = getUserByPrincipal(principal);
-        List<String> phones1 = user.getPhones();
+        Set<String> phones1 = user.getPhones();
         if (phones1.size() ==  1) {
             log.warn("It is yours last phone you cuoldnt remove it");
             throw new LastPhoneException("It is yours last phone you cuoldnt remove it");
@@ -138,7 +150,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void deleteEmail(String email, Principal principal){
         User user = getUserByPrincipal(principal);
-        List<String> phones1 = user.getEmails();
+        Set<String> phones1 = user.getEmails();
         if (phones1.size() ==  1) {
             log.warn("It is yours last email you cuoldnt remove it");
             throw new LastEmailException("It is yours last email you cuoldnt remove it");
@@ -160,7 +172,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDTO findByPhone(String phone){
         List<User> users= userRepository.findAll();
-        return userMapper.toUserDTO(users.stream()
+        return userMapper.toUserDTOFull(users.stream()
                 .filter(user -> user.getPhones().contains(phone))
                 .findFirst()
                 .orElse(null));
@@ -169,7 +181,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDTO findByEmail(String email){
         List<User> users= userRepository.findAll();
-        return userMapper.toUserDTO(users.stream()
+        return userMapper.toUserDTOFull(users.stream()
                 .filter(user -> user.getEmails().contains(email))
                 .findFirst()
                 .orElse(null));
@@ -189,6 +201,7 @@ public class UserServiceImpl implements UserService{
         int amount = request.getAmount();
         User sender = getUserByPrincipal(principal);
         User reciever = userRepository.findUserById(for_id).orElse(null);
+        //UserDTO reciever = userMapper.toUserDTO(reciever1);
         if (sender.getBankAccount().getCard().getBalance() - amount < 0 ) {
             throw new NotEnoughMoneyException("It is not enough money in tours account");
         }else {
@@ -198,11 +211,19 @@ public class UserServiceImpl implements UserService{
 
     }
 
+    public UserDTO getUserDTOByPrincipal(Principal principal) {
+        String username = principal.getName();
+        User user =  userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found with username " + username));
+        return userMapper.toUserDTOFull(user);
+    }
+
     @Override
     public User getUserByPrincipal(Principal principal) {
         String username = principal.getName();
-        return userRepository.findUserByUsername(username)
+        User user =  userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found with username " + username));
+        return user;
     }
 
 }

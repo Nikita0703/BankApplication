@@ -1,5 +1,8 @@
 package com.example.bankaccounts.service;
 
+import com.example.bankaccounts.dto.UserDTO;
+import com.example.bankaccounts.mapper.UserMapper;
+import com.example.bankaccounts.payload.CustomPrincipal;
 import com.example.bankaccounts.repository.UserRepository;
 import com.example.bankaccounts.security.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public static final Logger log = LoggerFactory.getLogger(JWTTokenProvider.class);
 
@@ -38,11 +42,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public static User build(User user) {
-
         return new User(
                 user.getId(),
                 user.getUsername(),
                 user.getPassword()
-                );
+        );
     }
+
 }

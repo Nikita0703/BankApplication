@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "bank_Accounts6")
+@Table(name = "bank_Accounts8")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,13 +24,13 @@ public class BankAccount {
     private int id;
 
     @Column(nullable = false,unique = true)
-    private int UUID;
+    private int identicalNumber;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime creationDate;
 
-    @OneToOne(mappedBy = "bankAccount",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "bankAccount",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private User user;
 
     @OneToOne(mappedBy = "bankAccount",cascade = CascadeType.ALL)

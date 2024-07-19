@@ -8,7 +8,7 @@ import org.hibernate.annotations.Check;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "deposite6")
+@Table(name = "deposite8")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

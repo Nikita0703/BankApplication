@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table( name = "users6",
-        indexes = {@Index(name = "usernameIndex3",columnList = "username")})
+@Table( name = "users8",
+        indexes = {@Index(name = "usernameIndex5",columnList = "username")})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,19 +34,21 @@ public class User implements UserDetails {
     private String password;
 
     @ElementCollection(targetClass = ERole.class)
-    @CollectionTable(name = "user_role6",
+    @CollectionTable(name = "user_role8",
             joinColumns = @JoinColumn(name = "user_id"))
     private Set<ERole> roles = new HashSet<>();
 
     @ElementCollection(targetClass = String.class)
-    @CollectionTable(name = "user_emails6",
+    @CollectionTable(name = "user_emails12",
+           // indexes = { @Index(columnList = "list_index3") },
             joinColumns = @JoinColumn(name = "user_id"))
-    private List<String> emails= new ArrayList<>();
+    private Set<String> emails = new HashSet<>();;
 
     @ElementCollection(targetClass = String.class)
-    @CollectionTable(name = "user_phones6",
+    @CollectionTable(name = "user_phones12",
+           // indexes = { @Index(columnList = "list_index4") },
             joinColumns = @JoinColumn(name = "user_id"))
-    private List<String> phones = new ArrayList<>();
+    private Set<String> phones = new HashSet<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bankAccount_id")
