@@ -1,5 +1,6 @@
 package com.example.bankaccounts.controller;
 
+import com.example.bankaccounts.dto.BankAccountDTO;
 import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.Card;
 import com.example.bankaccounts.entity.User;
@@ -43,5 +44,11 @@ public class BankAccountControllerImpl {
     public UserDTO getUserByAccount(@PathVariable int id){
        return bankAccountService.getUserByAccount(id);
     }
+
+    @GetMapping("/getAccountByUser")
+    public BankAccountDTO getAccountByUser(Principal principal){
+        return bankAccountService.getAccountByUser(principal);
+    }
+
 
 }
