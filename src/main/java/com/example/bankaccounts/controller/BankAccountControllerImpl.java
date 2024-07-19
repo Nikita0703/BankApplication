@@ -1,6 +1,7 @@
 package com.example.bankaccounts.controller;
 
 import com.example.bankaccounts.dto.BankAccountDTO;
+import com.example.bankaccounts.dto.CardDTO;
 import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.Card;
 import com.example.bankaccounts.entity.User;
@@ -9,6 +10,7 @@ import com.example.bankaccounts.service.BankAccountServiceImpl;
 import com.example.bankaccounts.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -50,5 +52,20 @@ public class BankAccountControllerImpl {
         return bankAccountService.getAccountByUser(principal);
     }
 
+    @PostMapping("/createCard")
+    public Object createCard(Principal principal){
+        bankAccountService.createCard(principal);
+        return ResponseEntity.ok(new MessageResponse("Email deleted successfully"));
+    }
+
+    @GetMapping("/getCardByUser")
+    public CardDTO getCardByUser(Principal principal){
+        return bankAccountService.getCardByUser(principal);
+    }
+
+    @GetMapping("/getUserByCard/{cardNumber}")
+    public UserDTO getUserByCard(@PathVariable int cardNumber){
+        return bankAccountService.getUserByCard(cardNumber);
+    }
 
 }

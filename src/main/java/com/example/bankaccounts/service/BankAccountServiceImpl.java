@@ -1,11 +1,15 @@
 package com.example.bankaccounts.service;
 
 import com.example.bankaccounts.dto.BankAccountDTO;
+import com.example.bankaccounts.dto.CardDTO;
 import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.BankAccount;
+import com.example.bankaccounts.entity.Card;
 import com.example.bankaccounts.entity.User;
 import com.example.bankaccounts.mapper.BankAccountMapper;
+import com.example.bankaccounts.mapper.CardMapper;
 import com.example.bankaccounts.repository.BankAccountRepository;
+import com.example.bankaccounts.repository.CardRepository;
 import com.example.bankaccounts.repository.UserRepository;
 import com.example.bankaccounts.security.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +23,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 //@RequiredArgsConstructor
@@ -29,15 +34,21 @@ public class BankAccountServiceImpl implements BankAccountService {
     private final UserRepository userRepository;
     private final BankAccountMapper bankAccountMapper;
     private final UserServiceImpl userService;
+    private final CardRepository cardRepository;
+    private final CardMapper cardMapper;
 
     public BankAccountServiceImpl(@Lazy UserServiceImpl userService,
                                   BankAccountRepository bankAccountRepository,
                                   UserRepository userRepository,
-                                  BankAccountMapper bankAccountMapper){
+                                  BankAccountMapper bankAccountMapper,
+                                  CardRepository cardRepository,
+                                  CardMapper cardMapper){
         this.userService = userService;
         this.bankAccountMapper = bankAccountMapper;
         this.bankAccountRepository = bankAccountRepository;
         this.userRepository = userRepository;
+        this.cardRepository = cardRepository;
+        this.cardMapper = cardMapper;
 
     }
 
@@ -76,4 +87,30 @@ public class BankAccountServiceImpl implements BankAccountService {
         return userDTO.getBankAccountDTO();
    }
 
+   public void createCard(Principal principal){
+        User user = userService.getUserByPrincipal(principal);
+        Card card = new Card();
+        Random rand = new Random();
+        card.setCardNumber(rand.nextInt(10000) + 1);
+        card.setCvv(rand.nextInt(1000) + 1);
+        String holderName = user.getPersonalInfo().getFirstName()+
+                            user.getPersonalInfo().getLastName();
+        card.setCardHolderName(holderName);
+        card.setBankAccount(user.getBankAccount());
+        user.getBankAccount().setCard(card);
+        cardRepository.save(card);
+        bankAccountRepository.save(user.getBankAccount());
+   }
+
+    public CardDTO getCardByUser(Principal principal){
+        UserDTO userDTO = userService.getUserDTOByPrincipal(principal);
+        return userDTO.getBankAccountDTO().getCard();
+    }
+
+    public UserDTO getUserByCard(int cardNumber){
+        Optional<Card> cardOptional = cardRepository.findByCvv(cardNumber);
+        Card card = cardOptional.get();
+        UserDTO user = bankAccountMapper.toBankAccountDTOFull(card.getBankAccount()).getUser();
+        return user;
+    }
 }

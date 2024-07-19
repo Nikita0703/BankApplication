@@ -30,7 +30,7 @@ public class BankAccountDTO {
 
     private Deposite deposite;
 
-    private Card card;
+    private CardDTO card;
 
     private List<HistoryItem> pets= new ArrayList<>();
 }

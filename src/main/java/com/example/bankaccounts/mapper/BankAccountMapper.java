@@ -8,16 +8,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class BankAccountMapper {
     private final UserMapper userMapper;
+    private final CardMapper cardMapper;
 
-    public BankAccountMapper(@Lazy UserMapper adressMapper) {
+    public BankAccountMapper(@Lazy UserMapper adressMapper,
+                             CardMapper cardMapper) {
         this.userMapper = adressMapper;
+        this.cardMapper = cardMapper;
     }
     public BankAccount toBankAccount(BankAccountDTO bankAccount){
     BankAccount bankAccountt = BankAccount.builder()
         .id(bankAccount.getId())
             .identicalNumber(bankAccount.getUUID())
                 .creationDate(bankAccount.getCreationDate())
-                    .card(bankAccount.getCard())
+                    .card(cardMapper.toCard(bankAccount.getCard()))
                         .deposite(bankAccount.getDeposite())
                               .pets(bankAccount.getPets()).build();
         return bankAccountt;
@@ -28,7 +31,7 @@ public class BankAccountMapper {
                 id(bankAccount.getId())
                    .UUID(bankAccount.getIdenticalNumber())
                         .creationDate(bankAccount.getCreationDate())
-                                .card(bankAccount.getCard())
+                                .card(cardMapper.toCardDTO(bankAccount.getCard()))
                                         .deposite(bankAccount.getDeposite())
                                                 .pets(bankAccount.getPets())
                 .build();
@@ -42,7 +45,7 @@ public class BankAccountMapper {
                 .UUID(bankAccount.getIdenticalNumber())
                 .creationDate(bankAccount.getCreationDate())
                 .user(userMapper.toUserDTO(bankAccount.getUser()))
-                .card(bankAccount.getCard())
+                .card(cardMapper.toCardDTO(bankAccount.getCard()))
                 .deposite(bankAccount.getDeposite())
                 .pets(bankAccount.getPets())
                 .build();

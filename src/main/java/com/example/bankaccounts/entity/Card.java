@@ -1,6 +1,7 @@
 package com.example.bankaccounts.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Check;
@@ -14,13 +15,14 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(nullable = false)
-    private String cardNumber;
+    private int cardNumber;
 
     @Column(nullable = false)
     private String cardHolderName;
@@ -42,4 +44,10 @@ public class Card {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bankAccount_id")
     private BankAccount bankAccount;
+
+    @PrePersist
+    protected void onCreate() {
+        this.expirationDate = LocalDateTime.now().plusYears(1);
+        this.balance = 0;
+    }
 }
