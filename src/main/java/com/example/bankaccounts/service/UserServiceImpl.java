@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService{
                 .collect(Collectors.toList()));
     }
 
-    @Override
+   // @Override
     @Transactional
     public synchronized void transferMoney(SendMoneyRequest request, Long for_id, Principal principal){
         int amount = request.getAmount();

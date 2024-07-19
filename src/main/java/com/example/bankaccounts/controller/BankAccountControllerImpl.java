@@ -5,14 +5,19 @@ import com.example.bankaccounts.dto.CardDTO;
 import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.Card;
 import com.example.bankaccounts.entity.User;
+import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.payload.response.MessageResponse;
 import com.example.bankaccounts.service.BankAccountServiceImpl;
 import com.example.bankaccounts.service.UserService;
+import com.example.bankaccounts.validation.ResponseErrorValidation;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.method.P;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDateTime;
 
@@ -21,6 +26,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class BankAccountControllerImpl {
     private final BankAccountServiceImpl bankAccountService;
+    private final ResponseErrorValidation responseErrorValidation;
 
   //  @PostMapping("/createCard")
    // public Object create(@RequestBody Card card,Principal principal) {
@@ -74,6 +80,16 @@ public class BankAccountControllerImpl {
         return ResponseEntity.ok(new MessageResponse("Put money on your balance"));
     }
 
+    @PutMapping
+    public Object transferMoney(@Valid @RequestBody SendMoneyRequest request,
+                                @PathVariable("id") int cardNumber,
+                                BindingResult bindingResult,
+                                Principal principal){
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+        bankAccountService.transferMoney(request,cardNumber,principal);
+        return ResponseEntity.ok("Success Tranfer");
+    }
 
 
 

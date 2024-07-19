@@ -6,8 +6,10 @@ import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.BankAccount;
 import com.example.bankaccounts.entity.Card;
 import com.example.bankaccounts.entity.User;
+import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.mapper.BankAccountMapper;
 import com.example.bankaccounts.mapper.CardMapper;
+import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.repository.BankAccountRepository;
 import com.example.bankaccounts.repository.CardRepository;
 import com.example.bankaccounts.repository.UserRepository;
@@ -18,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -119,6 +122,25 @@ public class BankAccountServiceImpl implements BankAccountService {
         int currentBalance = (int) user.getBankAccount().getCard().getBalance();
         user.getBankAccount().getCard().setBalance(currentBalance+sum);
         cardRepository.save( user.getBankAccount().getCard());
+    }
+
+    @Transactional
+    public synchronized void transferMoney(SendMoneyRequest request, int cardNumber, Principal principal){
+        int amount = request.getAmount();
+        User sender = userService.getUserByPrincipal(principal);
+        Optional<Card> cardOptional = cardRepository.findByCvv(cardNumber);
+        Card card = cardOptional.get();
+        User reciever = card.getBankAccount().getUser();
+        if (sender.getBankAccount().getCard().getBalance() - amount < 0 ) {
+            throw new NotEnoughMoneyException("It is not enough money in tours account");
+        }else {
+            sender.getBankAccount().getCard().setBalance(sender.getBankAccount().getCard().getBalance() - amount);
+            reciever.getBankAccount().getCard().setBalance(reciever.getBankAccount().getCard().getBalance() + amount);
+        }
+        cardRepository.save(sender.getBankAccount().getCard());
+        cardRepository.save( reciever.getBankAccount().getCard());
+
+
     }
 
 }

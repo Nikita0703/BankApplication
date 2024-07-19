@@ -42,7 +42,7 @@ public interface UserService {
 
     public List<UserDTO> findByFio(String fio);
 
-    public void transferMoney(SendMoneyRequest request, Long for_id, Principal principal);
+   // public void transferMoney(SendMoneyRequest request, Long for_id, Principal principal);
 
     public User getUserByPrincipal(Principal principal);
 

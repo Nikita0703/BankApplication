@@ -93,6 +93,7 @@ public class UserControllerImpl implements UserController{
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    /*
     @Override
     public ResponseEntity<Object> transfer(@Parameter( description = "The amount of money request", required=true, schema=@Schema(implementation = SendMoneyRequest.class))@Valid @RequestBody SendMoneyRequest request,
                                            @Parameter(in = ParameterIn.PATH, description = "The id who will get money" ,required=true,schema=@Schema(implementation = Long.class))@PathVariable("id") Long id,
@@ -104,5 +105,5 @@ public class UserControllerImpl implements UserController{
         userService.transferMoney(request,id,principal);
         return ResponseEntity.ok("Success Tranfer");
     }
-
+    */
 }
