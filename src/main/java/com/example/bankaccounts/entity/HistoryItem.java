@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_history8")
+@Table(name = "user_history9")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,5 +26,5 @@ public class HistoryItem {
     private int sum;
 
     @Column(nullable = false,updatable = false)
-    private int description;
+    private String description;
 }

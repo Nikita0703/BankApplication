@@ -5,6 +5,7 @@ import com.example.bankaccounts.dto.CardDTO;
 import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.BankAccount;
 import com.example.bankaccounts.entity.Card;
+import com.example.bankaccounts.entity.HistoryItem;
 import com.example.bankaccounts.entity.User;
 import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.mapper.BankAccountMapper;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -140,7 +142,25 @@ public class BankAccountServiceImpl implements BankAccountService {
         cardRepository.save(sender.getBankAccount().getCard());
         cardRepository.save( reciever.getBankAccount().getCard());
 
+        HistoryItem senderHistoryItem = new HistoryItem();
+        senderHistoryItem.setSum(amount);
+        senderHistoryItem.setCreationDate(LocalDateTime.now());
+        senderHistoryItem.setDescription("send money on the cardNumber"+ reciever.getBankAccount().getCard().getCardNumber());
+        sender.getBankAccount().getPets().add(senderHistoryItem);
+        bankAccountRepository.save(sender.getBankAccount());
+
+        HistoryItem recieverHistoryItem = new HistoryItem();
+        recieverHistoryItem.setSum(amount);
+        recieverHistoryItem.setCreationDate(LocalDateTime.now());
+        recieverHistoryItem.setDescription("recieved money from the cardNumber"+ sender.getBankAccount().getCard().getCardNumber());
+        reciever.getBankAccount().getPets().add(senderHistoryItem);
+        bankAccountRepository.save(reciever.getBankAccount());
+
 
     }
 
+    public List<HistoryItem>getHistory(Principal principal){
+        User user = userService.getUserByPrincipal(principal);
+        return  user.getBankAccount().getPets();
+    }
 }

@@ -4,6 +4,7 @@ import com.example.bankaccounts.dto.BankAccountDTO;
 import com.example.bankaccounts.dto.CardDTO;
 import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.Card;
+import com.example.bankaccounts.entity.HistoryItem;
 import com.example.bankaccounts.entity.User;
 import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.payload.response.MessageResponse;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/account")
@@ -27,26 +29,6 @@ import java.time.LocalDateTime;
 public class BankAccountControllerImpl {
     private final BankAccountServiceImpl bankAccountService;
     private final ResponseErrorValidation responseErrorValidation;
-
-  //  @PostMapping("/createCard")
-   // public Object create(@RequestBody Card card,Principal principal) {
-       // User user = userService.getUserByPrincipal(principal);
-      //  Card card = new Card();
-       // card.setCardNumber("1234567890123456");
-       // card.setCardHolderName("John Doe");
-       // card.setExpirationDate(LocalDateTime.of(2023, 12, 31, 23, 59, 59));
-       // card.setCvv(123);
-       // card.setBalance(1000.00);
-       // user.getBankAccount().setCard(card);
-       // userService.createUser(user);
-      //  return ResponseEntity.ok(new MessageResponse("Card added successfully"));
-  // }
-
-   // @GetMapping("/getCard")
-   // public Object getCardOfUSer(Principal principal){
-      //  User user = userService.getUserByPrincipal(principal);
-       // return user.getBankAccount().getCard();
-   // }
 
     @GetMapping("/getUserByAccount/{id}")
     public UserDTO getUserByAccount(@PathVariable int id){
@@ -91,6 +73,10 @@ public class BankAccountControllerImpl {
         return ResponseEntity.ok("Success Tranfer");
     }
 
+    @GetMapping("/getHistory")
+    public List<HistoryItem> getHistory(Principal principal){
+        return bankAccountService.getHistory(principal);
+    }
 
 
 }
