@@ -113,4 +113,12 @@ public class BankAccountServiceImpl implements BankAccountService {
         UserDTO user = bankAccountMapper.toBankAccountDTOFull(card.getBankAccount()).getUser();
         return user;
     }
+
+    public void putMoneyOnCard(int sum,Principal principal){
+        User user = userService.getUserByPrincipal(principal);
+        int currentBalance = (int) user.getBankAccount().getCard().getBalance();
+        user.getBankAccount().getCard().setBalance(currentBalance+sum);
+        cardRepository.save( user.getBankAccount().getCard());
+    }
+
 }

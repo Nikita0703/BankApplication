@@ -55,7 +55,7 @@ public class BankAccountControllerImpl {
     @PostMapping("/createCard")
     public Object createCard(Principal principal){
         bankAccountService.createCard(principal);
-        return ResponseEntity.ok(new MessageResponse("Email deleted successfully"));
+        return ResponseEntity.ok(new MessageResponse("Card ceeate successfully"));
     }
 
     @GetMapping("/getCardByUser")
@@ -67,5 +67,14 @@ public class BankAccountControllerImpl {
     public UserDTO getUserByCard(@PathVariable int cardNumber){
         return bankAccountService.getUserByCard(cardNumber);
     }
+
+    @PutMapping("/putMoney")
+    public Object putMoneyOnCard(@RequestParam int sum,Principal principal) {
+        bankAccountService.putMoneyOnCard(sum,principal);
+        return ResponseEntity.ok(new MessageResponse("Put money on your balance"));
+    }
+
+
+
 
 }
