@@ -144,14 +144,14 @@ public class BankAccountServiceImpl implements BankAccountService {
         senderHistoryItem.setSum(amount);
         senderHistoryItem.setCreationDate(LocalDateTime.now());
         senderHistoryItem.setDescription("send money on the cardNumber"+ reciever.getBankAccount().getCard().getCardNumber());
-        sender.getBankAccount().getPets().add(senderHistoryItem);
+        sender.getBankAccount().getHistoryItems().add(senderHistoryItem);
         bankAccountRepository.save(sender.getBankAccount());
 
         HistoryItem recieverHistoryItem = new HistoryItem();
         recieverHistoryItem.setSum(amount);
         recieverHistoryItem.setCreationDate(LocalDateTime.now());
         recieverHistoryItem.setDescription("recieved money from the cardNumber"+ sender.getBankAccount().getCard().getCardNumber());
-        reciever.getBankAccount().getPets().add(senderHistoryItem);
+        reciever.getBankAccount().getHistoryItems().add(senderHistoryItem);
         bankAccountRepository.save(reciever.getBankAccount());
 
 
@@ -160,7 +160,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public List<HistoryItemDTO>getHistory(Principal principal){
         User user = userService.getUserByPrincipal(principal);
-        return  historyItemMapper.toHisteryItemDTOList(user.getBankAccount().getPets());
+        return  historyItemMapper.toHisteryItemDTOList(user.getBankAccount().getHistoryItems());
     }
 
     @Override
@@ -218,6 +218,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    @Override
     public MessageResponse approveDeposite(int activationCode,Principal principal){
         User user = userService.getUserByPrincipal(principal);
         if(activationCode == user.getBankAccount().getDeposite().getActivationCode()){
@@ -228,6 +229,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         }
     }
 
+    @Override
     public void sendEmailMessage(String userEmail,int activationCode) {
         String messageText = String.format("Здраствуйте,Мы хотим сообщить вам что ваш активационный код %s", activationCode);
         SimpleMailMessage messageToActivateUser = new SimpleMailMessage();

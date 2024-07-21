@@ -7,6 +7,7 @@ import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.*;
 import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.payload.request.SendMoneyRequest;
+import com.example.bankaccounts.payload.response.MessageResponse;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
@@ -27,4 +28,6 @@ public interface BankAccountService {
     public void createDeposite(int sum,Principal principal);
     public UserDTO getUserByDeposite(int id);
     public void increaseBalance();
+    public MessageResponse approveDeposite(int activationCode, Principal principal);
+    public void sendEmailMessage(String userEmail,int activationCode);
 }

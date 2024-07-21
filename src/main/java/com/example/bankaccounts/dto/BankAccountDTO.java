@@ -26,5 +26,5 @@ public class BankAccountDTO {
 
     private CardDTO card;
 
-    private List<HistoryItemDTO> pets= new ArrayList<>();
+    private List<HistoryItemDTO> historyItems= new ArrayList<>();
 }

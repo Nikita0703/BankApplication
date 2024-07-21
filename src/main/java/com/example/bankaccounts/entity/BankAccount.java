@@ -41,6 +41,6 @@ public class BankAccount {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_id")
-    private List<HistoryItem> pets= new ArrayList<>();
+    private List<HistoryItem> historyItems= new ArrayList<>();
 
 }

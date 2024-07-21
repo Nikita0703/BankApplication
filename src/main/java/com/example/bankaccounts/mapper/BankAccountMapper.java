@@ -28,7 +28,7 @@ public class BankAccountMapper {
                 .creationDate(bankAccount.getCreationDate())
                     .card(cardMapper.toCard(bankAccount.getCard()))
                         .deposite(depositeMapper.toDeposite(bankAccount.getDeposite()))
-                              .pets(historyItemMapper.toHisteryItemList(bankAccount.getPets())).build();
+                              .historyItems(historyItemMapper.toHisteryItemList(bankAccount.getHistoryItems())).build();
         return bankAccountt;
     }
 
@@ -39,7 +39,7 @@ public class BankAccountMapper {
                         .creationDate(bankAccount.getCreationDate())
                                 .card(cardMapper.toCardDTO(bankAccount.getCard()))
                                         .deposite(depositeMapper.toDepositeDTO(bankAccount.getDeposite()))
-                                                .pets(historyItemMapper.toHisteryItemDTOList(bankAccount.getPets()))
+                                                .historyItems(historyItemMapper.toHisteryItemDTOList(bankAccount.getHistoryItems()))
                 .build();
         return bankAccountDTO;
     }
@@ -53,7 +53,7 @@ public class BankAccountMapper {
                 .user(userMapper.toUserDTO(bankAccount.getUser()))
                 .card(cardMapper.toCardDTO(bankAccount.getCard()))
                 .deposite(depositeMapper.toDepositeDTO(bankAccount.getDeposite()))
-                .pets(historyItemMapper.toHisteryItemDTOList(bankAccount.getPets()))
+                .historyItems(historyItemMapper.toHisteryItemDTOList(bankAccount.getHistoryItems()))
                 .build();
         return bankAccountDTO;
     }
