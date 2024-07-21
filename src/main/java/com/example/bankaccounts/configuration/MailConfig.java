@@ -4,6 +4,8 @@ package com.example.bankaccounts.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 
 import java.util.Properties;
@@ -22,7 +24,7 @@ public class MailConfig {
     @Value("${mail.password}")
     private String password;
 
-    /*
+
     @Bean
     public MailSender mailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -43,5 +45,4 @@ public class MailConfig {
         return mailSender;
     }
 
-     */
 }
