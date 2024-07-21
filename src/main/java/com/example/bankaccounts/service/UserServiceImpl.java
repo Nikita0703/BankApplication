@@ -226,4 +226,9 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
+    @Override
+    public User getUserByUsername(String username){
+        Optional<User> optionalUser = userRepository.findUserByUsername(username);
+        return optionalUser.get();
+    }
 }

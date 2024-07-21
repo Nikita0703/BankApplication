@@ -46,4 +46,6 @@ public interface UserService {
 
     public User getUserByPrincipal(Principal principal);
 
+    public User getUserByUsername(String username);
+
 }
