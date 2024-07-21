@@ -9,11 +9,17 @@ import org.springframework.stereotype.Component;
 public class BankAccountMapper {
     private final UserMapper userMapper;
     private final CardMapper cardMapper;
+    private final HistoryItemMapper historyItemMapper;
+    private final DepositeMapper depositeMapper;
 
     public BankAccountMapper(@Lazy UserMapper adressMapper,
-                             CardMapper cardMapper) {
+                             CardMapper cardMapper,
+                             HistoryItemMapper historyItemMapper,
+                             DepositeMapper depositeMapper) {
         this.userMapper = adressMapper;
         this.cardMapper = cardMapper;
+        this.historyItemMapper = historyItemMapper;
+        this.depositeMapper = depositeMapper;
     }
     public BankAccount toBankAccount(BankAccountDTO bankAccount){
     BankAccount bankAccountt = BankAccount.builder()
@@ -21,8 +27,8 @@ public class BankAccountMapper {
             .identicalNumber(bankAccount.getUUID())
                 .creationDate(bankAccount.getCreationDate())
                     .card(cardMapper.toCard(bankAccount.getCard()))
-                        .deposite(bankAccount.getDeposite())
-                              .pets(bankAccount.getPets()).build();
+                        .deposite(depositeMapper.toDeposite(bankAccount.getDeposite()))
+                              .pets(historyItemMapper.toHisteryItemList(bankAccount.getPets())).build();
         return bankAccountt;
     }
 
@@ -32,8 +38,8 @@ public class BankAccountMapper {
                    .UUID(bankAccount.getIdenticalNumber())
                         .creationDate(bankAccount.getCreationDate())
                                 .card(cardMapper.toCardDTO(bankAccount.getCard()))
-                                        .deposite(bankAccount.getDeposite())
-                                                .pets(bankAccount.getPets())
+                                        .deposite(depositeMapper.toDepositeDTO(bankAccount.getDeposite()))
+                                                .pets(historyItemMapper.toHisteryItemDTOList(bankAccount.getPets()))
                 .build();
         return bankAccountDTO;
     }
@@ -46,8 +52,8 @@ public class BankAccountMapper {
                 .creationDate(bankAccount.getCreationDate())
                 .user(userMapper.toUserDTO(bankAccount.getUser()))
                 .card(cardMapper.toCardDTO(bankAccount.getCard()))
-                .deposite(bankAccount.getDeposite())
-                .pets(bankAccount.getPets())
+                .deposite(depositeMapper.toDepositeDTO(bankAccount.getDeposite()))
+                .pets(historyItemMapper.toHisteryItemDTOList(bankAccount.getPets()))
                 .build();
         return bankAccountDTO;
     }

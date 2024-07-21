@@ -2,17 +2,17 @@ package com.example.bankaccounts.service;
 
 import com.example.bankaccounts.dto.BankAccountDTO;
 import com.example.bankaccounts.dto.CardDTO;
+import com.example.bankaccounts.dto.HistoryItemDTO;
 import com.example.bankaccounts.dto.UserDTO;
-import com.example.bankaccounts.entity.BankAccount;
-import com.example.bankaccounts.entity.Card;
-import com.example.bankaccounts.entity.HistoryItem;
-import com.example.bankaccounts.entity.User;
+import com.example.bankaccounts.entity.*;
 import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.mapper.BankAccountMapper;
 import com.example.bankaccounts.mapper.CardMapper;
+import com.example.bankaccounts.mapper.HistoryItemMapper;
 import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.repository.BankAccountRepository;
 import com.example.bankaccounts.repository.CardRepository;
+import com.example.bankaccounts.repository.DepositeRepository;
 import com.example.bankaccounts.repository.UserRepository;
 import com.example.bankaccounts.security.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -41,57 +41,41 @@ public class BankAccountServiceImpl implements BankAccountService {
     private final UserServiceImpl userService;
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
+    private final HistoryItemMapper historyItemMapper;
+    private final DepositeRepository depositeRepository;
 
     public BankAccountServiceImpl(@Lazy UserServiceImpl userService,
                                   BankAccountRepository bankAccountRepository,
                                   UserRepository userRepository,
                                   BankAccountMapper bankAccountMapper,
                                   CardRepository cardRepository,
-                                  CardMapper cardMapper){
+                                  CardMapper cardMapper,
+                                  HistoryItemMapper historyItemMapper,
+                                  DepositeRepository depositeRepository){
         this.userService = userService;
         this.bankAccountMapper = bankAccountMapper;
         this.bankAccountRepository = bankAccountRepository;
         this.userRepository = userRepository;
         this.cardRepository = cardRepository;
         this.cardMapper = cardMapper;
-
+        this.historyItemMapper = historyItemMapper;
+        this.depositeRepository = depositeRepository;
     }
 
     @Override
-    @Scheduled(fixedRate = 60000)
-    public void increaseBalance() {
-        List<User> users = userRepository.findAll();
-        List<Integer> initialDeposite = new ArrayList<>(users.size());
-        double interestRate = 0.05;
-        double maxInterestRate = 2.07;
-
-        for (User user : users) {
-            initialDeposite.add((int) user.getBankAccount().getCard().getBalance());
-        }
-
-       int i = 0;
-        for (User user : users) {
-           // if (user.getBankAccount().getCard().getBalance() * interestRate < initialDeposite.get(i) * maxInterestRate) {
-             //   user.getBankAccount().getCard().setBalance((int) ((int) user.getBankAccount().getCard().getBalance() * interestRate));
-            //    userService.createUser(user);
-            //    log.info("Увеличен на 5%");
-            }
-           // i++;
-       // }
-
-   }
-
    public UserDTO getUserByAccount(int id){
         BankAccount bankAccount = bankAccountRepository.findById(id).orElse(null);;
         BankAccountDTO bankAccountDTO = bankAccountMapper.toBankAccountDTOFull(bankAccount);
         return bankAccountDTO.getUser();
    }
 
+   @Override
    public BankAccountDTO getAccountByUser(Principal principal){
         UserDTO userDTO = userService.getUserDTOByPrincipal(principal);
         return userDTO.getBankAccountDTO();
    }
 
+    @Override
    public void createCard(Principal principal){
         User user = userService.getUserByPrincipal(principal);
         Card card = new Card();
@@ -107,11 +91,13 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccountRepository.save(user.getBankAccount());
    }
 
+    @Override
     public CardDTO getCardByUser(Principal principal){
         UserDTO userDTO = userService.getUserDTOByPrincipal(principal);
         return userDTO.getBankAccountDTO().getCard();
     }
 
+    @Override
     public UserDTO getUserByCard(int cardNumber){
         Optional<Card> cardOptional = cardRepository.findByCvv(cardNumber);
         Card card = cardOptional.get();
@@ -119,6 +105,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         return user;
     }
 
+    @Override
     public void putMoneyOnCard(int sum,Principal principal){
         User user = userService.getUserByPrincipal(principal);
         int currentBalance = (int) user.getBankAccount().getCard().getBalance();
@@ -126,6 +113,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         cardRepository.save( user.getBankAccount().getCard());
     }
 
+    @Override
     @Transactional
     public synchronized void transferMoney(SendMoneyRequest request, int cardNumber, Principal principal){
         int amount = request.getAmount();
@@ -159,8 +147,61 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
-    public List<HistoryItem>getHistory(Principal principal){
+    @Override
+    public List<HistoryItemDTO>getHistory(Principal principal){
         User user = userService.getUserByPrincipal(principal);
-        return  user.getBankAccount().getPets();
+        return  historyItemMapper.toHisteryItemDTOList(user.getBankAccount().getPets());
     }
+
+    @Override
+    public void createDeposite(int sum,Principal principal){
+        User user = userService.getUserByPrincipal(principal);
+        if (user.getBankAccount().getCard().getBalance() - sum < 0 ) {
+            throw new NotEnoughMoneyException("It is not enough money in tours account");
+        }else {
+            user.getBankAccount().getCard().setBalance(user.getBankAccount().getCard().getBalance() - sum );
+            Deposite deposite = new Deposite();
+            deposite.setSum(sum);
+            deposite.setTerm(12);
+            deposite.setInterestRate(5);
+            deposite.setActive(true);
+            deposite.setBankAccount(user.getBankAccount());
+            depositeRepository.save(deposite);
+            bankAccountRepository.save(user.getBankAccount());
+        }
+    }
+
+    @Override
+    public UserDTO getUserByDeposite(int id){
+        Optional<Deposite> cardOptional = depositeRepository.findById(id);
+        Deposite card = cardOptional.get();
+        UserDTO user = bankAccountMapper.toBankAccountDTOFull(card.getBankAccount()).getUser();
+        return user;
+    }
+
+    @Override
+    @Scheduled(fixedRate = 60000)
+    public void increaseBalance() {
+        List<User> users = userRepository.findAll();
+
+        int i = 0;
+        for (User user : users) {
+             if (user.getBankAccount().getDeposite().getTerm() > 0) {
+                 user.getBankAccount().getDeposite().setSum((int) (user.getBankAccount().getDeposite().getSum() +
+                         user.getBankAccount().getDeposite().getSum() * 0.01 *
+                                 user.getBankAccount().getDeposite().getInterestRate()));
+                 user.getBankAccount().getDeposite().setTerm(user.getBankAccount().getDeposite().getTerm() - 1);
+                 depositeRepository.save(user.getBankAccount().getDeposite());
+             }
+             if(user.getBankAccount().getDeposite().getTerm() == 0){
+                 user.getBankAccount().getCard().setBalance(user.getBankAccount().getCard().getBalance()+
+                                                            user.getBankAccount().getDeposite().getSum());
+                 cardRepository.save(user.getBankAccount().getCard());
+                 user.getBankAccount().getDeposite().setActive(false);
+                 depositeRepository.save(user.getBankAccount().getDeposite());
+             }
+        }
+
+    }
+
 }
