@@ -51,7 +51,7 @@ class BankAccountsApplicationTests {
 		SendMoneyRequest request = new SendMoneyRequest();
 		request.setAmount(100);
 
-		mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/user/transfer/1")
+		mockMvc.perform(MockMvcRequestBuilders.put("/api/account/transferMoney/1")
 						.header(HttpHeaders.AUTHORIZATION, jwt)
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(request)))
