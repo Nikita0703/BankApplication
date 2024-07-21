@@ -136,4 +136,6 @@ public interface BankAccountController {
     @GetMapping(value = "/getUserByDeposite/{id}",produces = { "application/json" })
     public UserDTO getUserByDeposite(@Parameter(in = ParameterIn.PATH, description = "The id of deposite" ,required=true,schema=@Schema(implementation = Integer.class))@PathVariable int id);
 
+    @GetMapping("/approveDeposite")
+    public Object approveDeposite(int activationCode,Principal principal);
 }

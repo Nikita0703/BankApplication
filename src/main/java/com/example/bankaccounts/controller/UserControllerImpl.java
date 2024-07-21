@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class UserControllerImpl implements UserController{
     private final UserService userService;
     private final ResponseErrorValidation responseErrorValidation;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public ResponseEntity<Object> addPhone(@Parameter(in = ParameterIn.QUERY, description = "The phone for adding" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("phone")String phone,
                                            Principal principal){
@@ -34,6 +36,7 @@ public class UserControllerImpl implements UserController{
         return ResponseEntity.ok(new MessageResponse("Phone added successfully"));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public ResponseEntity<Object> addEmail(@Parameter(in = ParameterIn.QUERY, description = "The phone for adding" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("email")String email,
                                            Principal principal){
@@ -41,6 +44,7 @@ public class UserControllerImpl implements UserController{
         return ResponseEntity.ok(new MessageResponse("Email added successfully"));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public ResponseEntity<Object> ChangePhone(@Parameter(in = ParameterIn.QUERY, description = "The phone for changing" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("phone")String phone,
                                               Principal principal){
@@ -48,6 +52,7 @@ public class UserControllerImpl implements UserController{
         return ResponseEntity.ok(new MessageResponse("Phone changed successfully"));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public ResponseEntity<Object> ChangeEmail(@Parameter(in = ParameterIn.QUERY, description = "The email for changing" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("email")String email,
                                               Principal principal){
@@ -55,6 +60,7 @@ public class UserControllerImpl implements UserController{
         return ResponseEntity.ok(new MessageResponse("Email changed successfully"));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public ResponseEntity<Object> DeletePhone(@Parameter(in = ParameterIn.QUERY, description = "The phone for deleting" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("phone")String phone,
                                               Principal principal){
@@ -62,6 +68,7 @@ public class UserControllerImpl implements UserController{
         return ResponseEntity.ok(new MessageResponse("Phone deleted successfully"));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public ResponseEntity<Object> DeleteEmail(@Parameter(in = ParameterIn.QUERY, description = "The email for deleting" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("email")String email,
                                               Principal principal){
@@ -69,24 +76,28 @@ public class UserControllerImpl implements UserController{
         return ResponseEntity.ok(new MessageResponse("Email deleted successfully"));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public ResponseEntity<Object> filterForBirthday(@Parameter(in = ParameterIn.QUERY, description = "The date for filter" ,required=true,schema=@Schema(implementation = LocalDateTime.class))@RequestParam("birthday") LocalDateTime birthday){
         List<UserDTO> list = userService.filterByBirthday(birthday);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public ResponseEntity<Object> findByTel(@Parameter(in = ParameterIn.QUERY, description = "The phone foe search" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("phone")String phone){
         UserDTO userDTO =  userService.findByPhone(phone);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public ResponseEntity<Object> findByEmail(@Parameter(in = ParameterIn.QUERY, description = "The phone foe search" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("email")String email){
         UserDTO userDTO = userService.findByEmail(email);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public ResponseEntity<Object>  findByFio(@Parameter(in = ParameterIn.QUERY, description = "The fio foe search" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("fio")String fio){
         List<UserDTO> list = userService.findByFio(fio);

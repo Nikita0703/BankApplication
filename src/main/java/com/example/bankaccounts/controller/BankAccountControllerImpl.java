@@ -15,6 +15,7 @@ import com.example.bankaccounts.validation.ResponseErrorValidation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -30,38 +31,45 @@ public class BankAccountControllerImpl implements BankAccountController{
     private final BankAccountServiceImpl bankAccountService;
     private final ResponseErrorValidation responseErrorValidation;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public UserDTO getUserByAccount(@PathVariable int id){
        return bankAccountService.getUserByAccount(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public BankAccountDTO getAccountByUser(Principal principal){
         return bankAccountService.getAccountByUser(principal);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public Object createCard(Principal principal){
         bankAccountService.createCard(principal);
         return ResponseEntity.ok(new MessageResponse("Card ceeate successfully"));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public CardDTO getCardByUser(Principal principal){
         return bankAccountService.getCardByUser(principal);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public UserDTO getUserByCard(@PathVariable int cardNumber){
         return bankAccountService.getUserByCard(cardNumber);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public Object putMoneyOnCard(@RequestParam int sum,Principal principal) {
         bankAccountService.putMoneyOnCard(sum,principal);
         return ResponseEntity.ok(new MessageResponse("Put money on your balance"));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public Object transferMoney(@Valid @RequestBody SendMoneyRequest request,
                                 @PathVariable("id") int cardNumber,
@@ -73,20 +81,28 @@ public class BankAccountControllerImpl implements BankAccountController{
         return ResponseEntity.ok("Success Tranfer");
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public List<HistoryItemDTO> getHistory(Principal principal){
         return bankAccountService.getHistory(principal);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Override
     public Object createDeposite(@RequestParam int sum, Principal principal){
         bankAccountService.createDeposite(sum,principal);
-        return ResponseEntity.ok(new MessageResponse("Deposite ceeate successfully"));
+        return ResponseEntity.ok(new MessageResponse("Deposite ceeate successfully to activate enter the activation sode send to your email"));
     }
 
+    @PreAuthorize("hasRole('ROLE_AMIN')")
     @Override
     public UserDTO getUserByDeposite(@PathVariable int id){
         return bankAccountService.getUserByDeposite(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Override
+    public Object approveDeposite(int activationCode,Principal principal){
+       return bankAccountService.approveDeposite(activationCode,principal);
+    }
 }

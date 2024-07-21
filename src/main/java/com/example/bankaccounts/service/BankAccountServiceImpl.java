@@ -10,6 +10,7 @@ import com.example.bankaccounts.mapper.BankAccountMapper;
 import com.example.bankaccounts.mapper.CardMapper;
 import com.example.bankaccounts.mapper.HistoryItemMapper;
 import com.example.bankaccounts.payload.request.SendMoneyRequest;
+import com.example.bankaccounts.payload.response.MessageResponse;
 import com.example.bankaccounts.repository.BankAccountRepository;
 import com.example.bankaccounts.repository.CardRepository;
 import com.example.bankaccounts.repository.DepositeRepository;
@@ -18,7 +19,10 @@ import com.example.bankaccounts.security.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +38,8 @@ import java.util.Random;
 //@RequiredArgsConstructor
 public class BankAccountServiceImpl implements BankAccountService {
     public static final Logger log = LoggerFactory.getLogger(JWTTokenProvider.class);
+    @Value("${mail.username}")
+    private String emailFrom;
 
     private final BankAccountRepository bankAccountRepository;
     private final UserRepository userRepository;
@@ -44,6 +50,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     private final HistoryItemMapper historyItemMapper;
     private final DepositeRepository depositeRepository;
 
+    private final MailSender mailSender;
+
     public BankAccountServiceImpl(@Lazy UserServiceImpl userService,
                                   BankAccountRepository bankAccountRepository,
                                   UserRepository userRepository,
@@ -51,7 +59,8 @@ public class BankAccountServiceImpl implements BankAccountService {
                                   CardRepository cardRepository,
                                   CardMapper cardMapper,
                                   HistoryItemMapper historyItemMapper,
-                                  DepositeRepository depositeRepository){
+                                  DepositeRepository depositeRepository,
+                                  MailSender mailSender){
         this.userService = userService;
         this.bankAccountMapper = bankAccountMapper;
         this.bankAccountRepository = bankAccountRepository;
@@ -60,6 +69,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         this.cardMapper = cardMapper;
         this.historyItemMapper = historyItemMapper;
         this.depositeRepository = depositeRepository;
+        this.mailSender = mailSender;
     }
 
     @Override
@@ -164,10 +174,14 @@ public class BankAccountServiceImpl implements BankAccountService {
             deposite.setSum(sum);
             deposite.setTerm(12);
             deposite.setInterestRate(5);
-            deposite.setActive(true);
+            deposite.setActive(false);
+            deposite.setActivationCode(1111);
             deposite.setBankAccount(user.getBankAccount());
             depositeRepository.save(deposite);
             bankAccountRepository.save(user.getBankAccount());
+            for (String email: user.getEmails()) {
+                sendEmailMessage(email,1111);
+            }
         }
     }
 
@@ -204,4 +218,24 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    public MessageResponse approveDeposite(int activationCode,Principal principal){
+        User user = userService.getUserByPrincipal(principal);
+        if(activationCode == user.getBankAccount().getDeposite().getActivationCode()){
+            user.getBankAccount().getDeposite().setActive(true);
+            return new MessageResponse("deposite is active");
+        }else {
+            return new MessageResponse("Not valid activation code");
+        }
+    }
+
+    public void sendEmailMessage(String userEmail,int activationCode) {
+        String messageText = String.format("Здраствуйте,Мы хотим сообщить вам что ваш активационный код %s", activationCode);
+        SimpleMailMessage messageToActivateUser = new SimpleMailMessage();
+        messageToActivateUser.setTo(userEmail);
+        messageToActivateUser.setFrom(emailFrom);
+        messageToActivateUser.setSubject("Ваш пароль был изменен");
+        messageToActivateUser.setText(messageText);
+
+        mailSender.send(messageToActivateUser);
+    }
 }
