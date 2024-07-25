@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="insert-into2" author="Nikita">
+        <insert tableName="bank_accounts">
+            <column name="id" value="1"/>
+            <column name="creation_date" value="2024-01-01 00:00:00"/>
+            <column name="identical_number" value="1111"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="1"/>
+            <column name="username" value="nikita"/>
+            <column name="password" value="nikita"/>
+            <column name="bank_account_id" value="1"/>
+            <column name="personal_info_id" value="1"/>
+        </insert>
+
+        <insert tableName="user_role">
+            <column name="user_id" value="1"/>
+            <column name="roles" value="0"/>
+        </insert>
+
+        <insert tableName="user_emails">
+            <column name="id" value="1"/>
+            <column name="user_id" value="1"/>
+            <column name="emails" value="efuifwiu@gmail.com"/>
+        </insert>
+
+        <insert tableName="user_phones">
+            <column name="id" value="1"/>
+            <column name="user_id" value="1"/>
+            <column name="phones" value="2146193"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
