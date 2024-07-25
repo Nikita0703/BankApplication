@@ -19,7 +19,7 @@ import javax.validation.Valid;
 
 @RequestMapping("/api/auth")
 public interface AuthController {
-    @Operation(summary = "This is adding new user", description = "Get the UserDTO", tags={ "add" })
+    @Operation(summary = "Добавление новог опользователя", description = "Получает UserDTO", tags={ "add" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class))),
 
@@ -27,10 +27,10 @@ public interface AuthController {
 
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @PostMapping(value = "/add", produces = { "application/json" })
-    public ResponseEntity<Object> saveUser(@Parameter( description = "The given user for add", required=true, schema=@Schema(implementation = UserDTO.class)) @Valid @RequestBody UserDTO user,
+    public ResponseEntity<Object> saveUser(@Parameter( description = "пользователь для добавления", required=true, schema=@Schema(implementation = UserDTO.class)) @Valid @RequestBody UserDTO user,
                                            BindingResult result);
 
-    @Operation(summary = "This is for sign in", description = "Get the username and password", tags={ "sigh" })
+    @Operation(summary = "Аутентификация", description = "По username и password", tags={ "sigh" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class))),
 
@@ -38,6 +38,6 @@ public interface AuthController {
 
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @PostMapping(value = "/singin",produces = { "application/json" })
-    public ResponseEntity<Object> authenticateUser(@Parameter( description = "The request for sign in", required=true, schema=@Schema(implementation = LoginRequest.class))@Valid @RequestBody LoginRequest loginRequest,
+    public ResponseEntity<Object> authenticateUser(@Parameter( description = "Запрос для аутентификации", required=true, schema=@Schema(implementation = LoginRequest.class))@Valid @RequestBody LoginRequest loginRequest,
                                                    BindingResult result);
 }

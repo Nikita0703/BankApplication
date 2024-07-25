@@ -109,7 +109,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public UserDTO getUserByCard(int cardNumber){
-        Optional<Card> cardOptional = cardRepository.findByCvv(cardNumber);
+        Optional<Card> cardOptional = cardRepository.findByCardNumber(cardNumber);
         Card card = cardOptional.get();
         UserDTO user = bankAccountMapper.toBankAccountDTOFull(card.getBankAccount()).getUser();
         return user;
@@ -128,7 +128,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     public synchronized void transferMoney(SendMoneyRequest request, int cardNumber, Principal principal){
         int amount = request.getAmount();
         User sender = userService.getUserByPrincipal(principal);
-        Optional<Card> cardOptional = cardRepository.findByCvv(cardNumber);
+        Optional<Card> cardOptional = cardRepository.findByCardNumber(cardNumber);
         Card card = cardOptional.get();
         User reciever = card.getBankAccount().getUser();
         if (sender.getBankAccount().getCard().getBalance() - amount < 0 ) {

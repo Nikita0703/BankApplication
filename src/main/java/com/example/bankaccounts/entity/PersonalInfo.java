@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_data8")
+@Table(name = "user_data")
 @Data
 @Builder
 @AllArgsConstructor
@@ -20,18 +20,23 @@ public class PersonalInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    //тип паспорта
     @Column(nullable = false)
     private char passportType;
 
+    //id паспорта
     @Column(nullable = false)
     private  String  passportID;
 
+    //имя
     @Column(nullable = false)
     private String firstName;
 
+    //фамилия
     @Column(nullable = false)
     private String lastName;
 
+    //дата рождения
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime birthday;

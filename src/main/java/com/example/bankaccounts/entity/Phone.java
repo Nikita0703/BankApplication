@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name = "user_phones12")
+@Table(name = "user_phones")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,8 +16,10 @@ public class Phone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //id пользователя кому принадлежит этот телефон
     private int user_id;
 
+    //значение
     @Column(unique = true)
     private String phones;
 

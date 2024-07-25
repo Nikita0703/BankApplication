@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "bank_Accounts8")
+@Table(name = "bank_Accounts")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,22 +23,28 @@ public class BankAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    //UUID аккаунта
     @Column(nullable = false,unique = true)
     private int identicalNumber;
 
+    //дата создания аккаунта
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime creationDate;
 
+    //пользователь чей этот аккаунт
     @OneToOne(mappedBy = "bankAccount",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private User user;
 
+    //депозит этого аккаунта
     @OneToOne(mappedBy = "bankAccount",cascade = CascadeType.ALL)
     private Deposite deposite;
 
+    //карта аккаунта
     @OneToOne(mappedBy = "bankAccount",cascade = CascadeType.ALL)
     private Card card;
 
+    //история операций
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "employee_id")
     private List<HistoryItem> historyItems= new ArrayList<>();

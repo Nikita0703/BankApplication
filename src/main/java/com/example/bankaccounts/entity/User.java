@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table( name = "users8",
-        indexes = {@Index(name = "usernameIndex5",columnList = "username")})
+@Table( name = "users",
+        indexes = {@Index(name = "usernameIndex",columnList = "username")})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,33 +27,40 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //username пользователя
     @Column(name = "username",unique = true)
     private String username;
 
+    //пароль пользователя
     @Column(name = "password",unique = true)
     private String password;
 
+   //роль пользователя
     @ElementCollection(targetClass = ERole.class)
-    @CollectionTable(name = "user_role8",
+    @CollectionTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"))
     private Set<ERole> roles = new HashSet<>();
 
+    //почты пользователя
     @ElementCollection(targetClass = String.class)
-    @CollectionTable(name = "user_emails12",
+    @CollectionTable(name = "user_emails",
            // indexes = { @Index(columnList = "list_index3") },
             joinColumns = @JoinColumn(name = "user_id"))
     private Set<String> emails = new HashSet<>();;
 
+    //номера телефонов
     @ElementCollection(targetClass = String.class)
-    @CollectionTable(name = "user_phones12",
+    @CollectionTable(name = "user_phones",
            // indexes = { @Index(columnList = "list_index4") },
             joinColumns = @JoinColumn(name = "user_id"))
     private Set<String> phones = new HashSet<>();
 
+    //банковский аккаунт пользователя
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bankAccount_id")
     private BankAccount bankAccount;
 
+    //персональные данные пользователя
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "personalInfo_id")
     private PersonalInfo personalInfo;

@@ -11,7 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "card8")
+@Table(name = "card")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,23 +21,29 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    //номер карты
     @Column(nullable = false)
     private int cardNumber;
 
+    //имя владельца
     @Column(nullable = false)
     private String cardHolderName;
 
+    //дата до которой децствует
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime expirationDate;
 
+    //cvv
     @Column(nullable = false)
     private int cvv;
 
+    //баланс карты
     @Column(nullable = false)
     @Check(constraints = "balance > 0")
     private double balance;
 
+    //статус
     @Column(nullable = false,columnDefinition = "boolean default true")
     private boolean isActive;
 

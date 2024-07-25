@@ -25,7 +25,7 @@ import java.util.List;
 @RequestMapping("/api/account")
 public interface BankAccountController {
 
-    @Operation(summary = "serach for user", description = "Get the user by account", tags={ "findUserByAccount" })
+    @Operation(summary = "Поиск пользователя по аккаунту", description = "По id акаунта", tags={ "findUserByAccount" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
 
@@ -36,7 +36,7 @@ public interface BankAccountController {
     public UserDTO getUserByAccount(@Parameter(in = ParameterIn.PATH, description = "The id of bankAccount" ,required=true,schema=@Schema(implementation = Integer.class))
                                         @PathVariable int id);
 
-    @Operation(summary = "serach for user", description = "Get account by user", tags={ "findAccountByUser" })
+    @Operation(summary = "Поиск аккаунта пользователя", description = "Возврат аккаунта пользователя", tags={ "findAccountByUser" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BankAccountDTO.class))),
 
@@ -47,7 +47,7 @@ public interface BankAccountController {
     public BankAccountDTO getAccountByUser(Principal principal);
 
 
-    @Operation(summary = "create card", description = "create card by user", tags={ "createCard" })
+    @Operation(summary = "Создание карты", description = "cоздание карты для пользоваьеля", tags={ "createCard" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class))),
 
@@ -57,7 +57,7 @@ public interface BankAccountController {
     @PostMapping(value = "/createCard",produces = { "application/json" })
     public Object createCard(Principal principal);
 
-    @Operation(summary = "search for user", description = "get card by user", tags={ "getCard" })
+    @Operation(summary = "Поиск карты пользоваьея", description = "возврат карты", tags={ "getCard" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CardDTO.class))),
 
@@ -67,7 +67,7 @@ public interface BankAccountController {
     @GetMapping(value = "/getCardByUser",produces = { "application/json" })
     public CardDTO getCardByUser(Principal principal);
 
-    @Operation(summary = "search for user", description = "get user by card", tags={ "getUserByCard" })
+    @Operation(summary = "Получение пользователя по карте", description = "Получение пользователя по номеру карте", tags={ "getUserByCard" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
 
@@ -75,10 +75,10 @@ public interface BankAccountController {
 
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @GetMapping(value = "/getUserByCard/{cardNumber}",produces = { "application/json" })
-    public UserDTO getUserByCard(@Parameter(in = ParameterIn.PATH, description = "The card Number" ,required=true,schema=@Schema(implementation = Integer.class))
+    public UserDTO getUserByCard(@Parameter(in = ParameterIn.PATH, description = "Номер карты" ,required=true,schema=@Schema(implementation = Integer.class))
                                      @PathVariable int cardNumber);
 
-    @Operation(summary = "put money for user", description = "put money on users bankAccount", tags={ "putMoney" })
+    @Operation(summary = "Положить денгт на счет", description = "положить определенную суму на свой счет", tags={ "putMoney" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class))),
 
@@ -86,12 +86,12 @@ public interface BankAccountController {
 
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @PutMapping(value = "/putMoney",produces = { "application/json" })
-    public Object putMoneyOnCard(@Parameter(in = ParameterIn.QUERY, description = "The sum of money" ,required=true,schema=@Schema(implementation = Integer.class))
+    public Object putMoneyOnCard(@Parameter(in = ParameterIn.QUERY, description = "Сумма денег" ,required=true,schema=@Schema(implementation = Integer.class))
                                      @RequestParam int sum,
                                         Principal principal);
 
 
-    @Operation(summary = "Transfer monyy from 1 account to another", description = "Get the amount of money and id of user who will get it ", tags={ "transfer" })
+    @Operation(summary = "Перевод денег с одной карты на другую", description = "По номеру карты ", tags={ "transfer" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
 
@@ -100,12 +100,12 @@ public interface BankAccountController {
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @PutMapping(value = "/transferMoney/{id}",produces = { "application/json" })
     public Object transferMoney(@Parameter( description = "The amount of money request", required=true, schema=@Schema(implementation = SendMoneyRequest.class))@Valid @RequestBody SendMoneyRequest request,
-                                @Parameter(in = ParameterIn.PATH, description = "The id who will get money" ,required=true,schema=@Schema(implementation = Integer.class))@PathVariable("id") int cardNumber,
+                                @Parameter(in = ParameterIn.PATH, description = "Номер карты" ,required=true,schema=@Schema(implementation = Integer.class))@PathVariable("id") int cardNumber,
                                 BindingResult bindingResult,
                                 Principal principal);
 
 
-    @Operation(summary = "get history of user", description = "Get the history of user ", tags={ "history" })
+    @Operation(summary = "Получение истории карты пользователя", description = "история", tags={ "history" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = HistoryItemDTO.class))),
 
@@ -115,7 +115,7 @@ public interface BankAccountController {
     @GetMapping(value = "/getHistory",produces = { "application/json" })
     public List<HistoryItemDTO> getHistory(Principal principal);
 
-    @Operation(summary = "create deposite", description = "create card by user", tags={ "createDeposite" })
+    @Operation(summary = "создание депозита", description = "создание депозита пользователем", tags={ "createDeposite" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MessageResponse.class))),
 
@@ -123,10 +123,10 @@ public interface BankAccountController {
 
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @PostMapping(value = "/createDeposite",produces = { "application/json" })
-    public Object createDeposite(@Parameter(in = ParameterIn.QUERY, description = "The sum of money" ,required=true,schema=@Schema(implementation = Integer.class))@RequestParam int sum,
+    public Object createDeposite(@Parameter(in = ParameterIn.QUERY, description = "сумма" ,required=true,schema=@Schema(implementation = Integer.class))@RequestParam int sum,
                                  Principal principal);
 
-    @Operation(summary = "search for user", description = "get user by deposite", tags={ "getUserByDep" })
+    @Operation(summary = "Поиск пользователя по депозитк", description = "по id", tags={ "getUserByDep" })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
 
@@ -134,7 +134,7 @@ public interface BankAccountController {
 
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @GetMapping(value = "/getUserByDeposite/{id}",produces = { "application/json" })
-    public UserDTO getUserByDeposite(@Parameter(in = ParameterIn.PATH, description = "The id of deposite" ,required=true,schema=@Schema(implementation = Integer.class))@PathVariable int id);
+    public UserDTO getUserByDeposite(@Parameter(in = ParameterIn.PATH, description = "id депозита" ,required=true,schema=@Schema(implementation = Integer.class))@PathVariable int id);
 
     @GetMapping("/approveDeposite")
     public Object approveDeposite(int activationCode,Principal principal);

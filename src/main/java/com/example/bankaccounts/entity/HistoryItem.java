@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_history9")
+@Table(name = "user_history")
 @Data
 @Builder
 @AllArgsConstructor
@@ -20,13 +20,16 @@ public class HistoryItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
 
+    //дата перевода
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime creationDate;
 
+    //сумма перевода
     @Column(nullable = false,updatable = false)
     private int sum;
 
+    //описание перевода(кому,куда,цель)
     @Column(nullable = false,updatable = false)
     private String description;
 }
