@@ -66,3 +66,11 @@
 
  тесты на покрытие функционала трансфера денег.
 
+ Для корректного заполнения базы данных для тестовой сущности необходимо:
+ -раскомментировать строки //	BCryptPasswordEncoder bCryptPasswordEncoder = context.getBean(BCryptPasswordEncoder.class);
+	                         //	String rawPassword = "nikita";
+	                         //	String encodedPassword = bCryptPasswordEncoder.encode(rawPassword);
+   котрые находятся в main и запустить в режиме отладки,там вас будет интересовать encodedPassword
+ -значение этого encodedPassword занести в db.changelog/v1.0.0/015.insert-into-tables.xml в insert для сущности user поле password
+ -при авторизации использовать в качетсве пароля значение rawPasssword
+ -так же все include в changelog.xml необходимо запускать последовательно(сверху вниз) для корркетного заполнения бд
