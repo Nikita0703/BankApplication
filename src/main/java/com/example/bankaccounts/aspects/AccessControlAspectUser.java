@@ -5,10 +5,13 @@ import com.example.bankaccounts.entity.enums.ERole;
 import com.example.bankaccounts.payload.response.MessageResponse;
 import com.example.bankaccounts.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -38,7 +41,7 @@ public class AccessControlAspectUser {
             }
 
             if(!flag){
-                return new MessageResponse("You dont have access");
+                ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("You don't have access"));
             }
         }
         return joinPoint.proceed();

@@ -9,6 +9,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -37,7 +39,7 @@ public class AccessControlAspectBankAccount {
             }
 
             if(!flag){
-                return new MessageResponse("You dont have access");
+                ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("You don't have access"));
             }
         }
         return joinPoint.proceed();
