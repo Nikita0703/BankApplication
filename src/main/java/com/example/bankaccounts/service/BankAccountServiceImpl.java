@@ -245,7 +245,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public void sendEmailMessage(String userEmail,int activationCode) {
-        String messageText = String.format("Здраствуйте,Мы хотим сообщить вам что ваш активационный код %s", activationCode);
+        String messageText = String.format("Здраствуйте,Мы хотим сообщить вам что ваш активационный код %d", activationCode);
         SimpleMailMessage messageToActivateUser = new SimpleMailMessage();
         messageToActivateUser.setTo(userEmail);
         messageToActivateUser.setFrom(emailFrom);
