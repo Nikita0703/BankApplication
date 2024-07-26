@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="insert-into" author="Nikita">
+        <insert tableName="user_data">
+            <column name="first_name" value="Nikita"/>
+            <column name="last_name" value="Novic"/>
+            <column name="passport_type" value="F"/>
+            <column name="passportid" value="1135"/>
+            <column name="birthday" value="1990-01-01 00:00:00"/>
+        </insert>
+
+    </changeSet>
+
+
+</databaseChangeLog>

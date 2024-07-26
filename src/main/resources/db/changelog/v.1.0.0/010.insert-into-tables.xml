@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="insert-into" author="Nikita">
+
+        <insert tableName="users">
+            <column name="username" value="nikita"/>
+            <column name="password" value="$2a$10$06uqZgn3gGcLJTaNwWpqee1ZMiwelXHo26i7rnwG44qCW2Qhu7eSW"/>
+            <column name="bank_account_id" value="1"/>
+            <column name="personal_info_id" value="1"/>
+        </insert>
+
+
+    </changeSet>
+
+
+</databaseChangeLog>
