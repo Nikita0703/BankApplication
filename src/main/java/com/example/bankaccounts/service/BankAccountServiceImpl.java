@@ -5,6 +5,7 @@ import com.example.bankaccounts.dto.CardDTO;
 import com.example.bankaccounts.dto.HistoryItemDTO;
 import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.*;
+import com.example.bankaccounts.exception.CardNotActiveException;
 import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.mapper.BankAccountMapper;
 import com.example.bankaccounts.mapper.CardMapper;
@@ -115,9 +116,13 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public void putMoneyOnCard(int sum,Principal principal){
         User user = userService.getUserByPrincipal(principal);
-        int currentBalance = (int) user.getBankAccount().getCard().getBalance();
-        user.getBankAccount().getCard().setBalance(currentBalance+sum);
-        cardRepository.save( user.getBankAccount().getCard());
+        if(user.getBankAccount().getCard().getActive() && user.getBankAccount().getCard()!=null) {
+            int currentBalance = (int) user.getBankAccount().getCard().getBalance();
+            user.getBankAccount().getCard().setBalance(currentBalance + sum);
+            cardRepository.save(user.getBankAccount().getCard());
+        }else {
+            throw new CardNotActiveException("you dont have card or it is does not active");
+        }
     }
 
     @Override
@@ -127,30 +132,36 @@ public class BankAccountServiceImpl implements BankAccountService {
         User sender = userService.getUserByPrincipal(principal);
         Optional<Card> cardOptional = cardRepository.findByCardNumber(cardNumber);
         Card card = cardOptional.get();
-        User reciever = card.getBankAccount().getUser();
-        if (sender.getBankAccount().getCard().getBalance() - amount < 0 ) {
-            throw new NotEnoughMoneyException("It is not enough money in tours account");
-        }else {
-            sender.getBankAccount().getCard().setBalance(sender.getBankAccount().getCard().getBalance() - amount);
-            reciever.getBankAccount().getCard().setBalance(reciever.getBankAccount().getCard().getBalance() + amount);
+        if (card == null) {
+            throw new CardNotActiveException("you dont have card or it is does not active");
         }
-        cardRepository.save(sender.getBankAccount().getCard());
-        cardRepository.save( reciever.getBankAccount().getCard());
+        User reciever = card.getBankAccount().getUser();
 
-        HistoryItem senderHistoryItem = new HistoryItem();
-        senderHistoryItem.setSum(amount);
-        senderHistoryItem.setCreationDate(LocalDateTime.now());
-        senderHistoryItem.setDescription("send money on the cardNumber"+ reciever.getBankAccount().getCard().getCardNumber());
-        sender.getBankAccount().getHistoryItems().add(senderHistoryItem);
-        bankAccountRepository.save(sender.getBankAccount());
+        if(sender.getBankAccount().getCard().getActive()) {
+            if (sender.getBankAccount().getCard().getBalance() - amount < 0) {
+                throw new NotEnoughMoneyException("It is not enough money in tours account");
+            } else {
+                sender.getBankAccount().getCard().setBalance(sender.getBankAccount().getCard().getBalance() - amount);
+                reciever.getBankAccount().getCard().setBalance(reciever.getBankAccount().getCard().getBalance() + amount);
+            }
+            cardRepository.save(sender.getBankAccount().getCard());
+            cardRepository.save(reciever.getBankAccount().getCard());
 
-        HistoryItem recieverHistoryItem = new HistoryItem();
-        recieverHistoryItem.setSum(amount);
-        recieverHistoryItem.setCreationDate(LocalDateTime.now());
-        recieverHistoryItem.setDescription("recieved money from the cardNumber"+ sender.getBankAccount().getCard().getCardNumber());
-        reciever.getBankAccount().getHistoryItems().add(senderHistoryItem);
-        bankAccountRepository.save(reciever.getBankAccount());
+            HistoryItem senderHistoryItem = new HistoryItem();
+            senderHistoryItem.setSum(amount);
+            senderHistoryItem.setCreationDate(LocalDateTime.now());
+            senderHistoryItem.setDescription("send money on the cardNumber" + reciever.getBankAccount().getCard().getCardNumber());
+            sender.getBankAccount().getHistoryItems().add(senderHistoryItem);
+            bankAccountRepository.save(sender.getBankAccount());
 
+            HistoryItem recieverHistoryItem = new HistoryItem();
+            recieverHistoryItem.setSum(amount);
+            recieverHistoryItem.setCreationDate(LocalDateTime.now());
+            recieverHistoryItem.setDescription("recieved money from the cardNumber" + sender.getBankAccount().getCard().getCardNumber());
+            reciever.getBankAccount().getHistoryItems().add(senderHistoryItem);
+            bankAccountRepository.save(reciever.getBankAccount());
+        } else {
+            throw new CardNotActiveException("you dont have card or it is does not active");}
 
     }
 
@@ -197,7 +208,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         int i = 0;
         for (User user : users) {
-            if(user.getBankAccount().getDeposite()!=null) {
+            if(user.getBankAccount().getDeposite()!=null && user.getBankAccount().getDeposite().getActive()) {
                 if (user.getBankAccount().getDeposite().getTerm() > 0) {
                     user.getBankAccount().getDeposite().setSum((int) (user.getBankAccount().getDeposite().getSum() +
                             user.getBankAccount().getDeposite().getSum() * 0.01 *
@@ -247,7 +258,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         int i = 0;
         for (User user : users) {
-            if(user.getBankAccount().getCard()!=null) {
+            if(user.getBankAccount().getCard()!=null && user.getBankAccount().getCard().getActive() ) {
                 if (Objects.equals(user.getBankAccount().getCard().getExpirationDate(), LocalDateTime.now())) {
                     user.getBankAccount().getCard().setActive(false);
                     cardRepository.save(user.getBankAccount().getCard());

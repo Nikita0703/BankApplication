@@ -1,9 +1,6 @@
 package com.example.bankaccounts.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Check;
 
 import javax.persistence.*;
@@ -44,4 +41,8 @@ public class Deposite {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bankAccount_id")
     private BankAccount bankAccount;
+
+    public boolean getActive() {
+        return isActive;
+    }
 }

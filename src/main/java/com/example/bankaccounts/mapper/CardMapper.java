@@ -18,7 +18,7 @@ public class CardMapper {
                 .expirationDate(card.getExpirationDate())
                 .cvv(card.getCvv())
                 .balance(card.getBalance())
-                .isActive(card.isActive())
+                .isActive(card.getActive())
                 .build();
         return cardDTO;
     }

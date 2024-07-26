@@ -56,4 +56,8 @@ public class Card {
         this.expirationDate = LocalDateTime.now().plusYears(1);
         this.balance = 0;
     }
+
+    public boolean getActive() {
+        return isActive;
+    }
 }

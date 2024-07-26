@@ -17,7 +17,7 @@ public class DepositeMapper {
                 .term(deposite.getTerm())
                 .interestRate(deposite.getInterestRate())
                 .activationCode(deposite.getActivationCode())
-                .isActive(deposite.isActive())
+                .isActive(deposite.getActive())
                 .build();
         return depositeDTO;
     }
