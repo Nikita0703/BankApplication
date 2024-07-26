@@ -41,9 +41,10 @@ public class AccessControlAspectUser {
             }
 
             if(!flag){
-                ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("You don't have access"));
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse("You don't have access"));
             }
         }
-        return joinPoint.proceed();
+       return joinPoint.proceed();
+
     }
 }
