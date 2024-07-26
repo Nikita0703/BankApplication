@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="insert-into" author="Nikita">
+
+        <insert tableName="user_role">
+            <column name="user_id" value="1"/>
+            <column name="roles" value="1"/>
+        </insert>
+
+        <insert tableName="user_emails">
+            <column name="user_id" value="1"/>
+            <column name="emails" value="efuifwiu@gmail.com"/>
+        </insert>
+
+        <insert tableName="user_phones">
+            <column name="user_id" value="1"/>
+            <column name="phones" value="2146193"/>
+        </insert>
+
+    </changeSet>
+
+
+</databaseChangeLog>

@@ -31,7 +31,7 @@ public class AccessControlAspectBankAccount {
             boolean flag = false;
 
             for (ERole role:user.getRoles()) {
-                if ("ROLE_ADMIN".equals(role)) {
+                if ("ROLE_ADMIN".equals(role.name())) {
                     flag = true;
                 }
             }

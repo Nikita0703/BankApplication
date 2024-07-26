@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 public class DepositeMapper {
 
     DepositeDTO toDepositeDTO(Deposite deposite){
+        if (deposite==null){
+            return DepositeDTO.builder().build();
+        }
         DepositeDTO depositeDTO = DepositeDTO.builder()
                 .id(deposite.getId())
                 .sum(deposite.getSum())

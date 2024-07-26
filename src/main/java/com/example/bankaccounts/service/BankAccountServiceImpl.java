@@ -29,10 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 //@RequiredArgsConstructor
@@ -194,26 +191,28 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 600000)
     public void increaseBalance() {
         List<User> users = userRepository.findAll();
 
         int i = 0;
         for (User user : users) {
-             if (user.getBankAccount().getDeposite().getTerm() > 0) {
-                 user.getBankAccount().getDeposite().setSum((int) (user.getBankAccount().getDeposite().getSum() +
-                         user.getBankAccount().getDeposite().getSum() * 0.01 *
-                                 user.getBankAccount().getDeposite().getInterestRate()));
-                 user.getBankAccount().getDeposite().setTerm(user.getBankAccount().getDeposite().getTerm() - 1);
-                 depositeRepository.save(user.getBankAccount().getDeposite());
-             }
-             if(user.getBankAccount().getDeposite().getTerm() == 0){
-                 user.getBankAccount().getCard().setBalance(user.getBankAccount().getCard().getBalance()+
-                                                            user.getBankAccount().getDeposite().getSum());
-                 cardRepository.save(user.getBankAccount().getCard());
-                 user.getBankAccount().getDeposite().setActive(false);
-                 depositeRepository.save(user.getBankAccount().getDeposite());
-             }
+            if(user.getBankAccount().getDeposite()!=null) {
+                if (user.getBankAccount().getDeposite().getTerm() > 0) {
+                    user.getBankAccount().getDeposite().setSum((int) (user.getBankAccount().getDeposite().getSum() +
+                            user.getBankAccount().getDeposite().getSum() * 0.01 *
+                                    user.getBankAccount().getDeposite().getInterestRate()));
+                    user.getBankAccount().getDeposite().setTerm(user.getBankAccount().getDeposite().getTerm() - 1);
+                    depositeRepository.save(user.getBankAccount().getDeposite());
+                }
+                if (user.getBankAccount().getDeposite().getTerm() == 0) {
+                    user.getBankAccount().getCard().setBalance(user.getBankAccount().getCard().getBalance() +
+                            user.getBankAccount().getDeposite().getSum());
+                    cardRepository.save(user.getBankAccount().getCard());
+                    user.getBankAccount().getDeposite().setActive(false);
+                    depositeRepository.save(user.getBankAccount().getDeposite());
+                }
+            }
         }
 
     }
@@ -239,5 +238,22 @@ public class BankAccountServiceImpl implements BankAccountService {
         messageToActivateUser.setText(messageText);
 
         mailSender.send(messageToActivateUser);
+    }
+
+    @Override
+    @Scheduled(fixedRate = 600000)
+    public void CheckCardIsActive() {
+        List<User> users = userRepository.findAll();
+
+        int i = 0;
+        for (User user : users) {
+            if(user.getBankAccount().getCard()!=null) {
+                if (Objects.equals(user.getBankAccount().getCard().getExpirationDate(), LocalDateTime.now())) {
+                    user.getBankAccount().getCard().setActive(false);
+                    cardRepository.save(user.getBankAccount().getCard());
+                }
+            }
+        }
+
     }
 }

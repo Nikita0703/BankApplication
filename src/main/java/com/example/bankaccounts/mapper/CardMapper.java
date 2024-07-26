@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 public class CardMapper {
 
     public CardDTO toCardDTO(Card card){
+        if (card == null){
+            CardDTO cardDTO = CardDTO.builder().build();
+            return cardDTO;
+        }
         CardDTO cardDTO = CardDTO.builder()
                 .cardNumber(card.getCardNumber())
                 .cardHolderName(card.getCardHolderName())

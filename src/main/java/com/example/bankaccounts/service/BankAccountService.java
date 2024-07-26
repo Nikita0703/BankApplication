@@ -30,4 +30,6 @@ public interface BankAccountService {
     public void increaseBalance();
     public MessageResponse approveDeposite(int activationCode, Principal principal);
     public void sendEmailMessage(String userEmail,int activationCode);
+    public void CheckCardIsActive();
+
 }
