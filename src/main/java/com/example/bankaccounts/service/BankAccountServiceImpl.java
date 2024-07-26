@@ -6,6 +6,7 @@ import com.example.bankaccounts.dto.HistoryItemDTO;
 import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.*;
 import com.example.bankaccounts.exception.CardNotActiveException;
+import com.example.bankaccounts.exception.CardNotExistsExseption;
 import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.mapper.BankAccountMapper;
 import com.example.bankaccounts.mapper.CardMapper;
@@ -133,6 +134,9 @@ public class BankAccountServiceImpl implements BankAccountService {
         Optional<Card> cardOptional = cardRepository.findByCardNumber(cardNumber);
         Card card = cardOptional.get();
         if (card == null) {
+            throw new CardNotExistsExseption("Card  with this number does not exists");
+        }
+        if(sender.getBankAccount().getCard()==null){
             throw new CardNotActiveException("you dont have card or it is does not active");
         }
         User reciever = card.getBankAccount().getUser();
