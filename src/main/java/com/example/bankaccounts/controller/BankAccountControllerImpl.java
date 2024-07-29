@@ -102,7 +102,7 @@ public class BankAccountControllerImpl implements BankAccountController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public Object approveDeposite(int activationCode,Principal principal){
+    public Object approveDeposite(@RequestParam("code") int activationCode,Principal principal){
        return bankAccountService.approveDeposite(activationCode,principal);
     }
 }
