@@ -94,6 +94,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         String holderName = user.getPersonalInfo().getFirstName()+
                             user.getPersonalInfo().getLastName();
         card.setCardHolderName(holderName);
+        card.setActive(true);
         card.setBankAccount(user.getBankAccount());
         user.getBankAccount().setCard(card);
         cardRepository.save(card);
@@ -262,10 +263,12 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         int i = 0;
         for (User user : users) {
-            if(user.getBankAccount().getCard()!=null && user.getBankAccount().getCard().getActive() ) {
-                if (Objects.equals(user.getBankAccount().getCard().getExpirationDate(), LocalDateTime.now())) {
-                    user.getBankAccount().getCard().setActive(false);
-                    cardRepository.save(user.getBankAccount().getCard());
+            if(user.getBankAccount().getCard()!=null){
+                if(user.getBankAccount().getCard().getActive() ) {
+                    if (Objects.equals(user.getBankAccount().getCard().getExpirationDate(), LocalDateTime.now())) {
+                        user.getBankAccount().getCard().setActive(false);
+                        cardRepository.save(user.getBankAccount().getCard());
+                    }
                 }
             }
         }
