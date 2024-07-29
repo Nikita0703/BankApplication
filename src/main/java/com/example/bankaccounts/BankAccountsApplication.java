@@ -9,8 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
 public class BankAccountsApplication {
-    @Autowired
-	public BCryptPasswordEncoder bCryptPasswordEncoder;
+
 	public static void main(String[] args) {
 		ApplicationContext context =SpringApplication.run(BankAccountsApplication.class, args);
 		BankAccountService bankAccountService = context.getBean(BankAccountService.class);
