@@ -9,7 +9,7 @@
     </changeSet>
 
      <include file="v.1.0.0/021.insert-into-tables.xml" relativeToChangelogFile="true"/>
-    <include file="v.1.0.0/022.insert-into-tables.xml" relativeToChangelogFile="true"/>
+   <include file="v.1.0.0/022.insert-into-tables.xml" relativeToChangelogFile="true"/>
      <include file="v.1.0.0/023.insert-into-tables.xml" relativeToChangelogFile="true"/>
       <include file="v.1.0.0/024.insert-into-tables.xml" relativeToChangelogFile="true"/>
 
