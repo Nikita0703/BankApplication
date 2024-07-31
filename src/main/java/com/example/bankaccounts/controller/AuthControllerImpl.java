@@ -27,8 +27,7 @@ public class AuthControllerImpl implements AuthController{
     private final AuthService authService;
 
     @Override
-    public ResponseEntity<Object> saveUser(@Parameter( description = "The given user for add", required=true, schema=@Schema(implementation = UserDTO.class)) @Valid @RequestBody UserDTO user,
-                                           BindingResult result){
+    public ResponseEntity<Object> saveUser( UserDTO user, BindingResult result){
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(result);
         if (!ObjectUtils.isEmpty(errors)) return errors;
         userService.createUserFromDTO(user);
@@ -36,8 +35,7 @@ public class AuthControllerImpl implements AuthController{
     }
 
     @Override
-    public ResponseEntity<Object> authenticateUser(@Parameter( description = "The request for sign in", required=true, schema=@Schema(implementation = LoginRequest.class))@Valid @RequestBody LoginRequest loginRequest,
-                                                   BindingResult result) {
+    public ResponseEntity<Object> authenticateUser(LoginRequest loginRequest, BindingResult result) {
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(result);
         if (!ObjectUtils.isEmpty(errors)) return errors;
         String jwt = authService.auth(loginRequest);

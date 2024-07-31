@@ -6,10 +6,13 @@
 
     <changeSet id="insert-into" author="Nikita">
 
-        <insert tableName="bank_accounts">
-            <column name="creation_date" value="2024-01-01 00:00:00"/>
-            <column name="identical_number" value="11111"/>
+        <insert tableName="users">
+            <column name="username" value="nikita"/>
+            <column name="password" value="$2a$10$WzEUFP0G6Ht9I0c5NJunGOOHeCc96Z5DT7cJ2Lnrc4sMB0KXWbnyGO"/>
+            <column name="bank_account_id" value="1"/>
+            <column name="personal_info_id" value="1"/>
         </insert>
+
 
     </changeSet>
 

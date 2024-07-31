@@ -7,8 +7,8 @@
     <changeSet id="insert-into" author="Nikita">
 
         <insert tableName="users">
-            <column name="username" value="nikita"/>
-            <column name="password" value="$2a$10$WzEUFP0G6Ht9I0c5NJnGOOHeCc96Z5DT7cJ2Lnrc4sMB0KXWbnyGO"/>
+            <column name="username" value="nikitaa"/>
+            <column name="password" value="$2a$10$WzEUFP0G6Ht9I0c5NJunGOOHeCc96Z5DT7cJ2Lnrc4sMB0KXWbnyGO"/>
             <column name="bank_account_id" value="1"/>
             <column name="personal_info_id" value="1"/>
         </insert>

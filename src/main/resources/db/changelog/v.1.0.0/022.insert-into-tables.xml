@@ -5,10 +5,12 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
     <changeSet id="insert-into" author="Nikita">
-
-        <insert tableName="bank_accounts">
-            <column name="creation_date" value="2024-01-01 00:00:00"/>
-            <column name="identical_number" value="11111"/>
+        <insert tableName="user_data">
+            <column name="first_name" value="Nikita"/>
+            <column name="last_name" value="Novic"/>
+            <column name="passport_type" value="F"/>
+            <column name="passportid" value="1135"/>
+            <column name="birthday" value="1990-01-01 00:00:00"/>
         </insert>
 
     </changeSet>

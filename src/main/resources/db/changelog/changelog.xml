@@ -8,10 +8,10 @@
         <tagDatabase tag="v.1.0.0"/>
     </changeSet>
 
-   <!--   <include file="v.1.0.0/017.insert-into-tables.xml" relativeToChangelogFile="true"/> -->
-   <!-- <include file="v.1.0.0/018.insert-into-tables.xml" relativeToChangelogFile="true"/> -->
-   <!--  <include file="v.1.0.0/019.insert-into-tables.xml" relativeToChangelogFile="true"/> -->
-    <!--  <include file="v.1.0.0/020.insert-into-tables.xml" relativeToChangelogFile="true"/> -->
+     <include file="v.1.0.0/021.insert-into-tables.xml" relativeToChangelogFile="true"/>
+    <include file="v.1.0.0/022.insert-into-tables.xml" relativeToChangelogFile="true"/>
+     <include file="v.1.0.0/023.insert-into-tables.xml" relativeToChangelogFile="true"/>
+      <include file="v.1.0.0/024.insert-into-tables.xml" relativeToChangelogFile="true"/>
 
 
 </databaseChangeLog>

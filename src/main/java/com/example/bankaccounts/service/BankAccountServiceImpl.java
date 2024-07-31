@@ -193,7 +193,7 @@ public class BankAccountServiceImpl implements BankAccountService {
             depositeRepository.save(deposite);
             bankAccountRepository.save(user.getBankAccount());
             for (String email: user.getEmails()) {
-              //  sendEmailMessage(email,1111);
+                sendEmailMessage(email,1111);
             }
         }
     }
