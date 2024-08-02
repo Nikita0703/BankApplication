@@ -34,7 +34,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-//@RequiredArgsConstructor
 public class BankAccountServiceImpl implements BankAccountService {
     public static final Logger log = LoggerFactory.getLogger(JWTTokenProvider.class);
     @Value("${mail.username}")
