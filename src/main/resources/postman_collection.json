@@ -1,0 +1,605 @@
+{
+	"info": {
+		"_postman_id": "8875383b-bdec-47d4-83ae-b1f6b444bf92",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30263521"
+	},
+	"item": [
+		{
+			"name": "localhost:8082/api/auth/add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"nik\",\r\n  \"password\": \"nik\",\r\n  \"emails\": [\"nikita.noviczenko2005@gmail.com\"],\r\n  \"phones\": [\"31235736\"],\r\n  \"personalInfoDTO\": {\r\n    \"passportType\": \"P\",\r\n    \"passportID\": \"45357756789\",\r\n    \"firstName\": \"rrgJhugretfeti\",\r\n    \"lastName\": \"rgyyadgegertfj\",\r\n    \"birthday\": \"1996-02-01 00:00:00\"\r\n  }\r\n}\r\n \r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/api/auth/add",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"auth",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/auth/singin",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n \"username\": \"nikita\",\r\n  \"password\": \"nikita\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/api/auth/singin",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"auth",
+						"singin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/v1/user/addPhone?phone=90875436434534",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjUiLCJleHAiOjE3MjIyNjIxMDEsImlhdCI6MTcyMjI2MTUwMSwidXNlcm5hbWUiOiJyYWJhbmEifQ.3hZxBcwjocd0j0RD9LGEHebUPkQAvadEkbchuqcV0pP933z22XEgN9yPLWhnkimH2Nj-LtlYIzZC4fN-Mjq-Xw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/v1/user/addPhone?phone=90875436434534",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"addPhone"
+					],
+					"query": [
+						{
+							"key": "phone",
+							"value": "90875436434534"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/getUserByAccount/4",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEiLCJleHAiOjE3MjIyNjI2MjMsImlhdCI6MTcyMjI2MjAyMywidXNlcm5hbWUiOiJuaWtpdGEifQ.ZVk9b5aX4F8yhvGor4-Mv-ygvtulnb67fF_dqLwPLhdV2na7ppywKXGvEEDJoSZImO3SLtseFcn8_IpScMNU0Q",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/account/getUserByAccount/4",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"getUserByAccount",
+						"4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/getAccountByUser",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjUiLCJleHAiOjE3MjIyNjIxMDEsImlhdCI6MTcyMjI2MTUwMSwidXNlcm5hbWUiOiJyYWJhbmEifQ.3hZxBcwjocd0j0RD9LGEHebUPkQAvadEkbchuqcV0pP933z22XEgN9yPLWhnkimH2Nj-LtlYIzZC4fN-Mjq-Xw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/account/getAccountByUser",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"getAccountByUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/createCard",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjYiLCJleHAiOjE3MjIyNzY0NzcsImlhdCI6MTcyMjI3NTg3NywidXNlcm5hbWUiOiJuaWsifQ.aocIXhVuJIkFPv9bNz2RFzQmqJbMxwzm-zGZvEVAyFSigxKzggTf-nuc7nxAsq_TbfKZvRX8fNgankNOm6AjUw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/account/createCard",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"createCard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/getCardByUser",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjUiLCJleHAiOjE3MjIyNjIxMDEsImlhdCI6MTcyMjI2MTUwMSwidXNlcm5hbWUiOiJyYWJhbmEifQ.3hZxBcwjocd0j0RD9LGEHebUPkQAvadEkbchuqcV0pP933z22XEgN9yPLWhnkimH2Nj-LtlYIzZC4fN-Mjq-Xw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/account/getCardByUser",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"getCardByUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/getUserByCard/8375",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEiLCJleHAiOjE3MjIyNjI2MjMsImlhdCI6MTcyMjI2MjAyMywidXNlcm5hbWUiOiJuaWtpdGEifQ.ZVk9b5aX4F8yhvGor4-Mv-ygvtulnb67fF_dqLwPLhdV2na7ppywKXGvEEDJoSZImO3SLtseFcn8_IpScMNU0Q",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/account/getUserByCard/8375",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"getUserByCard",
+						"8375"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/putMoney?sum=1000",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjYiLCJleHAiOjE3MjIyNzY0NzcsImlhdCI6MTcyMjI3NTg3NywidXNlcm5hbWUiOiJuaWsifQ.aocIXhVuJIkFPv9bNz2RFzQmqJbMxwzm-zGZvEVAyFSigxKzggTf-nuc7nxAsq_TbfKZvRX8fNgankNOm6AjUw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/account/putMoney?sum=1000",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"putMoney"
+					],
+					"query": [
+						{
+							"key": "sum",
+							"value": "1000"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/transferMoney/8375",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjUiLCJleHAiOjE3MjIyNjIxMDEsImlhdCI6MTcyMjI2MTUwMSwidXNlcm5hbWUiOiJyYWJhbmEifQ.3hZxBcwjocd0j0RD9LGEHebUPkQAvadEkbchuqcV0pP933z22XEgN9yPLWhnkimH2Nj-LtlYIzZC4fN-Mjq-Xw",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"amount\":5\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/api/account/transferMoney/8375",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"transferMoney",
+						"8375"
+					],
+					"query": [
+						{
+							"key": "sum",
+							"value": "25",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/getHistory",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjUiLCJleHAiOjE3MjIyNjIxMDEsImlhdCI6MTcyMjI2MTUwMSwidXNlcm5hbWUiOiJyYWJhbmEifQ.3hZxBcwjocd0j0RD9LGEHebUPkQAvadEkbchuqcV0pP933z22XEgN9yPLWhnkimH2Nj-LtlYIzZC4fN-Mjq-Xw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/account/getHistory",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"getHistory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/createDeposite?sum=10",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjYiLCJleHAiOjE3MjIyNzY0NzcsImlhdCI6MTcyMjI3NTg3NywidXNlcm5hbWUiOiJuaWsifQ.aocIXhVuJIkFPv9bNz2RFzQmqJbMxwzm-zGZvEVAyFSigxKzggTf-nuc7nxAsq_TbfKZvRX8fNgankNOm6AjUw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/account/createDeposite?sum=10",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"createDeposite"
+					],
+					"query": [
+						{
+							"key": "sum",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/getUserByDeposite/1",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjYiLCJleHAiOjE3MjE0ODE4NzYsImlhdCI6MTcyMTQ4MTI3NiwidXNlcm5hbWUiOiJhYmFuYSJ9.v2yadAMl78rE6VIZ1Dtpqe3XZuk20595oh8o7ehGb48iAqTPlqyvBoXbd01eXafuw3mgeN74fWIWba1NO5CG1Q",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/account/getUserByDeposite/1",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"getUserByDeposite",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/v1/user/email?email=darestgjerftrjone.com",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEiLCJleHAiOjE3MjE5OTAwMjEsImlhdCI6MTcyMTk4OTQyMSwidXNlcm5hbWUiOiJuaWtpdGEifQ.I5mMOEsy2Z4-dpWCf6rq0fi6ekBoEEmg0ewrgfLyfq7i9e1Z09QdL5v4rzYGd83CoKI7V4dJTbUrOYVn3EOj7g",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/v1/user/email?email=darestgjerftrjone.com",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"email"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "darestgjerftrjone.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/v1/user/fio?fio=Nik",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEiLCJleHAiOjE3MjIyNzY4NDYsImlhdCI6MTcyMjI3NjI0NiwidXNlcm5hbWUiOiJuaWtpdGEifQ.80ty9n64WSTkguzF3UFUZCMTBIsyfX8Gvgn4-zJTLxDxE9olZg-fI2KLC0l8H2DVnj_UgrD_0M5exQTVF21daA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/v1/user/fio?fio=Nik",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"fio"
+					],
+					"query": [
+						{
+							"key": "fio",
+							"value": "Nik"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/account/approveDeposite?code=1111",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjQiLCJleHAiOjE3MjIyNjE5NjQsImlhdCI6MTcyMjI2MTM2NCwidXNlcm5hbWUiOiJkZXJhYmFuYSJ9.-D6v3IY9c0evUS6tyiM9lAa0pG4pU80-heO4I798JN_pIeSllhJ2c8OzMyIdBOatub6AHkkRx_ERK2OxdFPlfg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/account/approveDeposite?code=1111",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"account",
+						"approveDeposite"
+					],
+					"query": [
+						{
+							"key": "code",
+							"value": "1111"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/v1/user/tel?phone=90875436434534",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEiLCJleHAiOjE3MjIyNjI2MjMsImlhdCI6MTcyMjI2MjAyMywidXNlcm5hbWUiOiJuaWtpdGEifQ.ZVk9b5aX4F8yhvGor4-Mv-ygvtulnb67fF_dqLwPLhdV2na7ppywKXGvEEDJoSZImO3SLtseFcn8_IpScMNU0Q",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/v1/user/tel?phone=90875436434534",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"tel"
+					],
+					"query": [
+						{
+							"key": "phone",
+							"value": "90875436434534"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/v1/user/deletePhone?phone=90875436434534",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjUiLCJleHAiOjE3MjIyNjMyMjksImlhdCI6MTcyMjI2MjYyOSwidXNlcm5hbWUiOiJyYWJhbmEifQ.L9jpEA_mCigdpMe1tXe_2QZ03qnx0QoG5rbF5CFgtY-_0YKNVLaNIavpxcNQ2DuMvOQ0S4w7SjUNatu1kU206g",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8082/api/v1/user/deletePhone?phone=90875436434534",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"deletePhone"
+					],
+					"query": [
+						{
+							"key": "phone",
+							"value": "90875436434534"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:8082/api/v1/user/birthdayFilter",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjEiLCJleHAiOjE3MjIyNzc0NjksImlhdCI6MTcyMjI3Njg2OSwidXNlcm5hbWUiOiJuaWtpdGEifQ.qKyfrXX_-SAcZTNyuQy69BVfTFN3cynZ23IRIzW2uiq1dMllA65sP6QZ-xyAYqLY-f_TlgCebnZd1El7IiGrJA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"date\": \"1996-02-01 00:00:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8082/api/v1/user/birthdayFilter",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"birthdayFilter"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "tokenNew",
+			"value": ""
+		}
+	]
+}
