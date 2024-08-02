@@ -17,7 +17,7 @@ public class BankAccountsApplication {
 		bankAccountService.increaseBalance();
 
 	//	BCryptPasswordEncoder bCryptPasswordEncoder = context.getBean(BCryptPasswordEncoder.class);
-	//	String rawPassword = "nikita";
+	//	String rawPassword = "nikitaa";
 	//	String encodedPassword = bCryptPasswordEncoder.encode(rawPassword);
 	}
 

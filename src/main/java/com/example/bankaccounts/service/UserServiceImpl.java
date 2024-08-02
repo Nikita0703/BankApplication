@@ -6,10 +6,7 @@ import com.example.bankaccounts.entity.Email;
 import com.example.bankaccounts.entity.Phone;
 import com.example.bankaccounts.entity.User;
 import com.example.bankaccounts.entity.enums.ERole;
-import com.example.bankaccounts.exception.LastEmailException;
-import com.example.bankaccounts.exception.LastPhoneException;
-import com.example.bankaccounts.exception.NotEnoughMoneyException;
-import com.example.bankaccounts.exception.PhoneExistsException;
+import com.example.bankaccounts.exception.*;
 import com.example.bankaccounts.mapper.BankAccountMapper;
 import com.example.bankaccounts.mapper.PersonalInfoMapper;
 import com.example.bankaccounts.mapper.UserMapper;
@@ -175,7 +172,7 @@ public class UserServiceImpl implements UserService{
         return userMapper.toUserDTOFull(users.stream()
                 .filter(user -> user.getPhones().contains(phone))
                 .findFirst()
-                .orElse(null));
+                .orElseThrow(() ->new PhoneExistsException("The phone doesn't exist")));
     }
 
     @Override
@@ -184,7 +181,7 @@ public class UserServiceImpl implements UserService{
         return userMapper.toUserDTOFull(users.stream()
                 .filter(user -> user.getEmails().contains(email))
                 .findFirst()
-                .orElse(null));
+                .orElseThrow(()->new EmailExistsException("The email doesn't exist")));
     }
 
     @Override
