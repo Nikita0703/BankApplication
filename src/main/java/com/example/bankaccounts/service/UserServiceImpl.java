@@ -51,7 +51,6 @@ public class UserServiceImpl implements UserService{
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        //user.setRoles(Collections.singleton(ERole.ROLE_USER));
         user.getRoles().add(ERole.ROLE_USER);
         user.setEmails(userDTO.getEmails());
         user.setPhones(userDTO.getPhones());
@@ -79,7 +78,6 @@ public class UserServiceImpl implements UserService{
         User user = getUserByPrincipal(principal);
         user.getPhones().add(string);
         log.info("добавлен успешно");
-       // userRepository.save(userMapper.toUser(user));
         userRepository.save(user);
     }
 
@@ -198,7 +196,6 @@ public class UserServiceImpl implements UserService{
         int amount = request.getAmount();
         User sender = getUserByPrincipal(principal);
         User reciever = userRepository.findUserById(for_id).orElse(null);
-        //UserDTO reciever = userMapper.toUserDTO(reciever1);
         if (sender.getBankAccount().getCard().getBalance() - amount < 0 ) {
             throw new NotEnoughMoneyException("It is not enough money in tours account");
         }else {
