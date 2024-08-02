@@ -1,6 +1,7 @@
 package com.example.bankaccounts.controller;
 
 import com.example.bankaccounts.dto.UserDTO;
+import com.example.bankaccounts.payload.request.DataRequest;
 import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.payload.response.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -97,7 +98,7 @@ public interface UserController {
 
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @GetMapping(value = "/birthdayFilter",produces = { "application/json" })
-    public ResponseEntity<Object> filterForBirthday(@Parameter(in = ParameterIn.QUERY, description = "Дата для фильтрации" ,required=true,schema=@Schema(implementation = LocalDateTime.class))@RequestParam("birthday") LocalDateTime birthday);
+    public ResponseEntity<Object> filterForBirthday(@Parameter( description = "дата для фильтрации", required=true, schema=@Schema(implementation = DataRequest.class)) @Valid @RequestBody DataRequest data,BindingResult bindingResult);
 
     @Operation(summary = "Поиск пользоватедя по номеру", description = "Поиск пользователя по номеру", tags={ "phone" })
     @ApiResponses(value = {

@@ -1,6 +1,7 @@
 package com.example.bankaccounts.controller;
 
 import com.example.bankaccounts.dto.UserDTO;
+import com.example.bankaccounts.payload.request.DataRequest;
 import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.payload.response.MessageResponse;
 import com.example.bankaccounts.service.UserService;
@@ -78,8 +79,10 @@ public class UserControllerImpl implements UserController{
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
-    public ResponseEntity<Object> filterForBirthday(@Parameter(in = ParameterIn.QUERY, description = "The date for filter" ,required=true,schema=@Schema(implementation = LocalDateTime.class))@RequestParam("birthday") LocalDateTime birthday){
-        List<UserDTO> list = userService.filterByBirthday(birthday);
+    public ResponseEntity<Object> filterForBirthday(DataRequest dataRequest,BindingResult bindingResult){
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+        List<UserDTO> list = userService.filterByBirthday(dataRequest.getDate());
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
