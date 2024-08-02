@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
 
-   // @Override
+    @Override
     @Transactional
     public void addTelephoneNumber(String string, Principal principal){
         User user = getUserByPrincipal(principal);

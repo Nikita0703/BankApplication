@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class DataRequest {
-    @NotEmpty
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime date;
 }

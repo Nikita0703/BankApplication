@@ -31,7 +31,7 @@ public class UserControllerImpl implements UserController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public ResponseEntity<Object> addPhone(@Parameter(in = ParameterIn.QUERY, description = "The phone for adding" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("phone")String phone,
+    public ResponseEntity<Object> addPhone(String phone,
                                            Principal principal){
         userService.addTelephoneNumber(phone,principal);
         return ResponseEntity.ok(new MessageResponse("Phone added successfully"));
@@ -39,7 +39,7 @@ public class UserControllerImpl implements UserController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public ResponseEntity<Object> addEmail(@Parameter(in = ParameterIn.QUERY, description = "The phone for adding" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("email")String email,
+    public ResponseEntity<Object> addEmail(String email,
                                            Principal principal){
         userService.addEmail(email,principal);
         return ResponseEntity.ok(new MessageResponse("Email added successfully"));
@@ -47,7 +47,7 @@ public class UserControllerImpl implements UserController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public ResponseEntity<Object> ChangePhone(@Parameter(in = ParameterIn.QUERY, description = "The phone for changing" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("phone")String phone,
+    public ResponseEntity<Object> ChangePhone(String phone,
                                               Principal principal){
         userService.changePhone(phone,principal);
         return ResponseEntity.ok(new MessageResponse("Phone changed successfully"));
@@ -55,7 +55,7 @@ public class UserControllerImpl implements UserController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public ResponseEntity<Object> ChangeEmail(@Parameter(in = ParameterIn.QUERY, description = "The email for changing" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("email")String email,
+    public ResponseEntity<Object> ChangeEmail(String email,
                                               Principal principal){
         userService.changeEmail(email,principal);
         return ResponseEntity.ok(new MessageResponse("Email changed successfully"));
@@ -63,7 +63,7 @@ public class UserControllerImpl implements UserController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public ResponseEntity<Object> DeletePhone(@Parameter(in = ParameterIn.QUERY, description = "The phone for deleting" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("phone")String phone,
+    public ResponseEntity<Object> DeletePhone(String phone,
                                               Principal principal){
         userService.deletePhone(phone,principal);
         return ResponseEntity.ok(new MessageResponse("Phone deleted successfully"));
@@ -71,7 +71,7 @@ public class UserControllerImpl implements UserController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public ResponseEntity<Object> DeleteEmail(@Parameter(in = ParameterIn.QUERY, description = "The email for deleting" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("email")String email,
+    public ResponseEntity<Object> DeleteEmail(String email,
                                               Principal principal){
         userService.deleteEmail(email,principal);
         return ResponseEntity.ok(new MessageResponse("Email deleted successfully"));
@@ -88,36 +88,23 @@ public class UserControllerImpl implements UserController{
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
-    public ResponseEntity<Object> findByTel(@Parameter(in = ParameterIn.QUERY, description = "The phone foe search" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("phone")String phone){
+    public ResponseEntity<Object> findByTel(String phone){
         UserDTO userDTO =  userService.findByPhone(phone);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
-    public ResponseEntity<Object> findByEmail(@Parameter(in = ParameterIn.QUERY, description = "The phone foe search" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("email")String email){
+    public ResponseEntity<Object> findByEmail(String email){
         UserDTO userDTO = userService.findByEmail(email);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
-    public ResponseEntity<Object>  findByFio(@Parameter(in = ParameterIn.QUERY, description = "The fio foe search" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("fio")String fio){
+    public ResponseEntity<Object>  findByFio(String fio){
         List<UserDTO> list = userService.findByFio(fio);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    /*
-    @Override
-    public ResponseEntity<Object> transfer(@Parameter( description = "The amount of money request", required=true, schema=@Schema(implementation = SendMoneyRequest.class))@Valid @RequestBody SendMoneyRequest request,
-                                           @Parameter(in = ParameterIn.PATH, description = "The id who will get money" ,required=true,schema=@Schema(implementation = Long.class))@PathVariable("id") Long id,
-                                           BindingResult bindingResult,
-                                           Principal principal)
-    {
-        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
-        if (!ObjectUtils.isEmpty(errors)) return errors;
-        userService.transferMoney(request,id,principal);
-        return ResponseEntity.ok("Success Tranfer");
-    }
-    */
 }

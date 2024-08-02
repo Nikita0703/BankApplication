@@ -1,11 +1,7 @@
 package com.example.bankaccounts.security;
 
 
-import com.example.bankaccounts.dto.UserDTO;
-import com.example.bankaccounts.payload.CustomPrincipal;
 import com.example.bankaccounts.service.CustomUserDetailsService;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

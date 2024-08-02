@@ -33,7 +33,7 @@ public class BankAccountControllerImpl implements BankAccountController{
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
-    public UserDTO getUserByAccount(@PathVariable int id){
+    public Object getUserByAccount(int id){
        return bankAccountService.getUserByAccount(id);
     }
 
@@ -58,21 +58,21 @@ public class BankAccountControllerImpl implements BankAccountController{
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
-    public UserDTO getUserByCard(@PathVariable int cardNumber){
+    public Object getUserByCard( int cardNumber){
         return bankAccountService.getUserByCard(cardNumber);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public Object putMoneyOnCard(@RequestParam int sum,Principal principal) {
+    public Object putMoneyOnCard( int sum,Principal principal) {
         bankAccountService.putMoneyOnCard(sum,principal);
         return ResponseEntity.ok(new MessageResponse("Put money on your balance"));
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public Object transferMoney(@Valid @RequestBody SendMoneyRequest request,
-                                @PathVariable("id") int cardNumber,
+    public Object transferMoney(SendMoneyRequest request,
+                                int cardNumber,
                                 BindingResult bindingResult,
                                 Principal principal){
         ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
@@ -89,20 +89,20 @@ public class BankAccountControllerImpl implements BankAccountController{
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public Object createDeposite(@RequestParam int sum, Principal principal){
+    public Object createDeposite(int sum, Principal principal){
         bankAccountService.createDeposite(sum,principal);
         return ResponseEntity.ok(new MessageResponse("Deposite ceeate successfully to activate enter the activation sode send to your email"));
     }
 
     @PreAuthorize("hasRole('ROLE_AMIN')")
     @Override
-    public UserDTO getUserByDeposite(@PathVariable int id){
+    public Object getUserByDeposite( int id){
         return bankAccountService.getUserByDeposite(id);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @Override
-    public Object approveDeposite(@RequestParam("code") int activationCode,Principal principal){
+    public Object approveDeposite(int activationCode,Principal principal){
        return bankAccountService.approveDeposite(activationCode,principal);
     }
 }

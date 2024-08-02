@@ -54,4 +54,33 @@ public class CustomExceptionHandler {
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CardNotActiveException.class)
+    public ResponseEntity<Object> CardNotActiveException(CardNotActiveException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("error", "Bad Request");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DepositeNotActiveException.class)
+    public ResponseEntity<Object> DepositeNotActiveException(DepositeNotActiveException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("error", "Bad Request");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(CardNotExistsExseption.class)
+    public ResponseEntity<Object> CardNotExistsException(CardNotExistsExseption ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("error", "Bad Request");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+
 }

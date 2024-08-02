@@ -33,7 +33,7 @@ public interface BankAccountController {
 
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @GetMapping(value = "/getUserByAccount/{id}",produces = { "application/json" })
-    public UserDTO getUserByAccount(@Parameter(in = ParameterIn.PATH, description = "The id of bankAccount" ,required=true,schema=@Schema(implementation = Integer.class))
+    public Object getUserByAccount(@Parameter(in = ParameterIn.PATH, description = "The id of bankAccount" ,required=true,schema=@Schema(implementation = Integer.class))
                                         @PathVariable int id);
 
     @Operation(summary = "Поиск аккаунта пользователя", description = "Возврат аккаунта пользователя", tags={ "findAccountByUser" })
@@ -75,7 +75,7 @@ public interface BankAccountController {
 
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @GetMapping(value = "/getUserByCard/{cardNumber}",produces = { "application/json" })
-    public UserDTO getUserByCard(@Parameter(in = ParameterIn.PATH, description = "Номер карты" ,required=true,schema=@Schema(implementation = Integer.class))
+    public Object getUserByCard(@Parameter(in = ParameterIn.PATH, description = "Номер карты" ,required=true,schema=@Schema(implementation = Integer.class))
                                      @PathVariable int cardNumber);
 
     @Operation(summary = "Положить денгт на счет", description = "положить определенную суму на свой счет", tags={ "putMoney" })
@@ -134,8 +134,8 @@ public interface BankAccountController {
 
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
     @GetMapping(value = "/getUserByDeposite/{id}",produces = { "application/json" })
-    public UserDTO getUserByDeposite(@Parameter(in = ParameterIn.PATH, description = "id депозита" ,required=true,schema=@Schema(implementation = Integer.class))@PathVariable int id);
+    public Object getUserByDeposite(@Parameter(in = ParameterIn.PATH, description = "id депозита" ,required=true,schema=@Schema(implementation = Integer.class))@PathVariable int id);
 
     @PutMapping ("/approveDeposite")
-    public Object approveDeposite(int activationCode,Principal principal);
+    public Object approveDeposite(@RequestParam("code") int activationCode,Principal principal);
 }
