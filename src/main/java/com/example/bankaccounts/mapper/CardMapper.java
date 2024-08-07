@@ -2,36 +2,13 @@ package com.example.bankaccounts.mapper;
 
 import com.example.bankaccounts.dto.CardDTO;
 import com.example.bankaccounts.entity.Card;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
 
-@Component
-public class CardMapper {
+@Mapper(componentModel = "spring")
+public interface CardMapper {
+    CardDTO cardToCardDTO(Card card);
 
-    public CardDTO toCardDTO(Card card){
-        if (card == null){
-            CardDTO cardDTO = CardDTO.builder().build();
-            return cardDTO;
-        }
-        CardDTO cardDTO = CardDTO.builder()
-                .cardNumber(card.getCardNumber())
-                .cardHolderName(card.getCardHolderName())
-                .expirationDate(card.getExpirationDate())
-                .cvv(card.getCvv())
-                .balance(card.getBalance())
-                .isActive(card.getActive())
-                .build();
-        return cardDTO;
-    }
-
-    public Card toCard(CardDTO card){
-        Card cardd = Card.builder()
-                .cardNumber(card.getCardNumber())
-                .cardHolderName(card.getCardHolderName())
-                .expirationDate(card.getExpirationDate())
-                .cvv(card.getCvv())
-                .balance(card.getBalance())
-                .isActive(card.isActive())
-                .build();
-        return cardd;
-    }
+    Card cardDTOToCard(CardDTO cardDTO);
 }

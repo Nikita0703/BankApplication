@@ -2,35 +2,10 @@ package com.example.bankaccounts.mapper;
 
 import com.example.bankaccounts.dto.DepositeDTO;
 import com.example.bankaccounts.entity.Deposite;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
-public class DepositeMapper {
-
-    DepositeDTO toDepositeDTO(Deposite deposite){
-        if (deposite==null){
-            return DepositeDTO.builder().build();
-        }
-        DepositeDTO depositeDTO = DepositeDTO.builder()
-                .id(deposite.getId())
-                .sum(deposite.getSum())
-                .term(deposite.getTerm())
-                .interestRate(deposite.getInterestRate())
-                .activationCode(deposite.getActivationCode())
-                .isActive(deposite.getActive())
-                .build();
-        return depositeDTO;
-    }
-
-    Deposite toDeposite(DepositeDTO deposite){
-        Deposite depositee = Deposite.builder()
-                .id(deposite.getId())
-                .sum(deposite.getSum())
-                .term(deposite.getTerm())
-                .interestRate(deposite.getInterestRate())
-                .activationCode(deposite.getActivationCode())
-                .isActive(deposite.isActive())
-                .build();
-        return depositee;
-    }
+@Mapper(componentModel = "spring")
+public interface DepositeMapper {
+    DepositeDTO depositeToDepositeDTO(Deposite deposite);
+    Deposite depositeDTOToDeposite(DepositeDTO depositeDTO);
 }

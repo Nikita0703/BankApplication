@@ -7,6 +7,7 @@ import com.example.bankaccounts.dto.UserDTO;
 import com.example.bankaccounts.entity.*;
 import com.example.bankaccounts.exception.CardNotActiveException;
 import com.example.bankaccounts.exception.CardNotExistsExseption;
+import com.example.bankaccounts.exception.DepositeNotActiveException;
 import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.mapper.BankAccountMapper;
 import com.example.bankaccounts.mapper.CardMapper;
@@ -18,7 +19,8 @@ import com.example.bankaccounts.repository.CardRepository;
 import com.example.bankaccounts.repository.DepositeRepository;
 import com.example.bankaccounts.repository.UserRepository;
 import com.example.bankaccounts.security.JWTTokenProvider;
-import lombok.RequiredArgsConstructor;
+import com.example.bankaccounts.utils.ApplicationConstants;
+import com.example.bankaccounts.utils.RandomCodeGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,7 +75,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
    public UserDTO getUserByAccount(int id){
         BankAccount bankAccount = bankAccountRepository.findById(id).orElse(null);;
-        BankAccountDTO bankAccountDTO = bankAccountMapper.toBankAccountDTOFull(bankAccount);
+        BankAccountDTO bankAccountDTO = bankAccountMapper.toFullBankAccountDTO(bankAccount);
         return bankAccountDTO.getUser();
    }
 
@@ -109,15 +111,15 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public UserDTO getUserByCard(int cardNumber){
         Optional<Card> cardOptional = cardRepository.findByCardNumber(cardNumber);
-        Card card = cardOptional.get();
-        UserDTO user = bankAccountMapper.toBankAccountDTOFull(card.getBankAccount()).getUser();
+        Card card = cardOptional.orElseThrow(() -> new CardNotExistsExseption(ApplicationConstants.CardNotExists));
+        UserDTO user = bankAccountMapper.toFullBankAccountDTO(card.getBankAccount()).getUser();
         return user;
     }
 
     @Override
     public void putMoneyOnCard(int sum,Principal principal){
         User user = userService.getUserByPrincipal(principal);
-        if(user.getBankAccount().getCard().getActive() && user.getBankAccount().getCard()!=null) {
+        if(user.getBankAccount().getCard()!=null && user.getBankAccount().getCard().getActive()) {
             int currentBalance = (int) user.getBankAccount().getCard().getBalance();
             user.getBankAccount().getCard().setBalance(currentBalance + sum);
             cardRepository.save(user.getBankAccount().getCard());
@@ -132,10 +134,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         int amount = request.getAmount();
         User sender = userService.getUserByPrincipal(principal);
         Optional<Card> cardOptional = cardRepository.findByCardNumber(cardNumber);
-        Card card = cardOptional.get();
-        if (card == null) {
-            throw new CardNotExistsExseption("Card  with this number does not exists");
-        }
+        Card card = cardOptional.orElseThrow(() -> new CardNotExistsExseption(ApplicationConstants.CardNotExists));
         if(sender.getBankAccount().getCard()==null){
             throw new CardNotActiveException("you dont have card or it is does not active");
         }
@@ -172,7 +171,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public List<HistoryItemDTO>getHistory(Principal principal){
         User user = userService.getUserByPrincipal(principal);
-        return  historyItemMapper.toHisteryItemDTOList(user.getBankAccount().getHistoryItems());
+        return  historyItemMapper.toHistoryItemDTOList(user.getBankAccount().getHistoryItems());
     }
 
     @Override
@@ -187,7 +186,8 @@ public class BankAccountServiceImpl implements BankAccountService {
             deposite.setTerm(12);
             deposite.setInterestRate(5);
             deposite.setActive(false);
-            deposite.setActivationCode(1111);
+            int activationCode = RandomCodeGenerator.generateCode();
+            deposite.setActivationCode(activationCode);
             deposite.setBankAccount(user.getBankAccount());
             depositeRepository.save(deposite);
             bankAccountRepository.save(user.getBankAccount());
@@ -199,9 +199,9 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public UserDTO getUserByDeposite(int id){
-        Optional<Deposite> cardOptional = depositeRepository.findById(id);
-        Deposite card = cardOptional.get();
-        UserDTO user = bankAccountMapper.toBankAccountDTOFull(card.getBankAccount()).getUser();
+        Optional<Deposite> depositeOptional = depositeRepository.findById(id);
+        Deposite deposite = depositeOptional.orElseThrow(() -> new DepositeNotActiveException(ApplicationConstants.DepositeNotActive));
+        UserDTO user = bankAccountMapper.toFullBankAccountDTO(deposite.getBankAccount()).getUser();
         return user;
     }
 
@@ -214,14 +214,16 @@ public class BankAccountServiceImpl implements BankAccountService {
         for (User user : users) {
             if(user.getBankAccount().getDeposite()!=null && user.getBankAccount().getDeposite().getActive()) {
                 if (user.getBankAccount().getDeposite().getTerm() > 0) {
-                    user.getBankAccount().getDeposite().setSum((int) (user.getBankAccount().getDeposite().getSum() +
-                            user.getBankAccount().getDeposite().getSum() * 0.01 *
-                                    user.getBankAccount().getDeposite().getInterestRate()));
+                    Deposite deposite =  user.getBankAccount().getDeposite();
+                    deposite.setSum((int) (deposite.getSum() +
+                            deposite.getSum() * 0.01 *
+                                    deposite.getInterestRate()));
                     user.getBankAccount().getDeposite().setTerm(user.getBankAccount().getDeposite().getTerm() - 1);
                     depositeRepository.save(user.getBankAccount().getDeposite());
                 }
                 if (user.getBankAccount().getDeposite().getTerm() == 0) {
-                    user.getBankAccount().getCard().setBalance(user.getBankAccount().getCard().getBalance() +
+                    Card card = user.getBankAccount().getCard();
+                    card.setBalance(card.getBalance() +
                             user.getBankAccount().getDeposite().getSum());
                     cardRepository.save(user.getBankAccount().getCard());
                     user.getBankAccount().getDeposite().setActive(false);
@@ -245,11 +247,11 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public void sendEmailMessage(String userEmail,int activationCode) {
-        String messageText = String.format("Здраствуйте,Мы хотим сообщить вам что ваш активационный код %d", activationCode);
+        String messageText = String.format(ApplicationConstants.EmailMessage+"%d", activationCode);
         SimpleMailMessage messageToActivateUser = new SimpleMailMessage();
         messageToActivateUser.setTo(userEmail);
         messageToActivateUser.setFrom(emailFrom);
-        messageToActivateUser.setSubject("Ваш пароль был изменен");
+        messageToActivateUser.setSubject(ApplicationConstants.Sublect);
         messageToActivateUser.setText(messageText);
 
         mailSender.send(messageToActivateUser);

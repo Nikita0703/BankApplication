@@ -24,5 +24,4 @@ public class CardDTO {
     private int cvv;
     private double balance;
     private boolean isActive;
-    private BankAccount bankAccount;
 }

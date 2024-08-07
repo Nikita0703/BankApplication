@@ -15,7 +15,7 @@ import java.util.List;
 public class BankAccountDTO {
     private int id;
 
-    private int UUID;
+    private int identicalNumber;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime creationDate;

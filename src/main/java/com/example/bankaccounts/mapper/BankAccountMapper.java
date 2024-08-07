@@ -2,59 +2,21 @@ package com.example.bankaccounts.mapper;
 
 import com.example.bankaccounts.dto.BankAccountDTO;
 import com.example.bankaccounts.entity.BankAccount;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
-@Component
-public class BankAccountMapper {
-    private final UserMapper userMapper;
-    private final CardMapper cardMapper;
-    private final HistoryItemMapper historyItemMapper;
-    private final DepositeMapper depositeMapper;
+import java.util.List;
 
-    public BankAccountMapper(@Lazy UserMapper adressMapper,
-                             CardMapper cardMapper,
-                             HistoryItemMapper historyItemMapper,
-                             DepositeMapper depositeMapper) {
-        this.userMapper = adressMapper;
-        this.cardMapper = cardMapper;
-        this.historyItemMapper = historyItemMapper;
-        this.depositeMapper = depositeMapper;
-    }
-    public BankAccount toBankAccount(BankAccountDTO bankAccount){
-    BankAccount bankAccountt = BankAccount.builder()
-        .id(bankAccount.getId())
-            .identicalNumber(bankAccount.getUUID())
-                .creationDate(bankAccount.getCreationDate())
-                    .card(cardMapper.toCard(bankAccount.getCard()))
-                        .deposite(depositeMapper.toDeposite(bankAccount.getDeposite()))
-                              .historyItems(historyItemMapper.toHisteryItemList(bankAccount.getHistoryItems())).build();
-        return bankAccountt;
-    }
+@Mapper(componentModel = "spring", uses = {UserMapper.class, CardMapper.class, HistoryItemMapper.class, DepositeMapper.class})
+public interface BankAccountMapper {
 
-    public BankAccountDTO toBankAccountDTO(BankAccount bankAccount){
-        BankAccountDTO bankAccountDTO = BankAccountDTO.builder().
-                id(bankAccount.getId())
-                   .UUID(bankAccount.getIdenticalNumber())
-                        .creationDate(bankAccount.getCreationDate())
-                                .card(cardMapper.toCardDTO(bankAccount.getCard()))
-                                        .deposite(depositeMapper.toDepositeDTO(bankAccount.getDeposite()))
-                                                .historyItems(historyItemMapper.toHisteryItemDTOList(bankAccount.getHistoryItems()))
-                .build();
-        return bankAccountDTO;
-    }
+    @Named("fullBankAccount")
+    @Mapping(target = "user", source = "user",qualifiedByName = "basicUser")
+    BankAccountDTO toFullBankAccountDTO(BankAccount bankAccount);
 
+    @Named("basicBankAccount")
+    @Mapping(target = "user", ignore = true)
+    BankAccountDTO toBasicBankAccountDTO(BankAccount bankAccount);
 
-    public BankAccountDTO toBankAccountDTOFull(BankAccount bankAccount){
-        BankAccountDTO bankAccountDTO = BankAccountDTO.builder().
-                id(bankAccount.getId())
-                .UUID(bankAccount.getIdenticalNumber())
-                .creationDate(bankAccount.getCreationDate())
-                .user(userMapper.toUserDTO(bankAccount.getUser()))
-                .card(cardMapper.toCardDTO(bankAccount.getCard()))
-                .deposite(depositeMapper.toDepositeDTO(bankAccount.getDeposite()))
-                .historyItems(historyItemMapper.toHisteryItemDTOList(bankAccount.getHistoryItems()))
-                .build();
-        return bankAccountDTO;
-    }
 }

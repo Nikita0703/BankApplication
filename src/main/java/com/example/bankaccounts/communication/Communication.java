@@ -1,5 +1,6 @@
 package com.example.bankaccounts.communication;
 
+import com.example.bankaccounts.utils.ApplicationConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ public class Communication {
     private String key;
 
     public String getKurs() {
-        String data = restTemplate.getForObject("https://api.nbrb.by/exrates/rates/"+key, String.class);
+        String data = restTemplate.getForObject(ApplicationConstants.BaseUrl +key, String.class);
         String target = "\"Cur_OfficialRate\":";
         int startIndex = data.indexOf(target) + target.length();
         int endIndex = data.indexOf("}", startIndex);

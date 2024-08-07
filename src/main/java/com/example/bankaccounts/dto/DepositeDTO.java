@@ -1,8 +1,7 @@
 package com.example.bankaccounts.dto;
 
 import com.example.bankaccounts.entity.BankAccount;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.Check;
 
 import javax.persistence.CascadeType;
@@ -10,10 +9,13 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-@Data
+//@Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class DepositeDTO {
-    private int id;
 
     private int sum;
 
@@ -25,5 +27,4 @@ public class DepositeDTO {
 
     private boolean isActive;
 
-    private BankAccount bankAccount;
 }
