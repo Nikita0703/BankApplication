@@ -31,6 +31,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -120,8 +121,8 @@ public class BankAccountServiceImpl implements BankAccountService {
     public void putMoneyOnCard(int sum,Principal principal){
         User user = userService.getUserByPrincipal(principal);
         if(user.getBankAccount().getCard()!=null && user.getBankAccount().getCard().getActive()) {
-            int currentBalance = (int) user.getBankAccount().getCard().getBalance();
-            user.getBankAccount().getCard().setBalance(currentBalance + sum);
+            BigDecimal currentBalance = user.getBankAccount().getCard().getBalance();
+            user.getBankAccount().getCard().setBalance(currentBalance.add(BigDecimal.valueOf(sum)));
             cardRepository.save(user.getBankAccount().getCard());
         }else {
             throw new CardNotActiveException("you dont have card or it is does not active");
@@ -141,11 +142,11 @@ public class BankAccountServiceImpl implements BankAccountService {
         User reciever = card.getBankAccount().getUser();
 
         if(sender.getBankAccount().getCard().getActive()) {
-            if (sender.getBankAccount().getCard().getBalance() - amount < 0) {
+           if (sender.getBankAccount().getCard().getBalance().subtract(BigDecimal.valueOf(amount)).compareTo(BigDecimal.ZERO) < 0){
                 throw new NotEnoughMoneyException("It is not enough money in tours account");
             } else {
-                sender.getBankAccount().getCard().setBalance(sender.getBankAccount().getCard().getBalance() - amount);
-                reciever.getBankAccount().getCard().setBalance(reciever.getBankAccount().getCard().getBalance() + amount);
+                sender.getBankAccount().getCard().setBalance(sender.getBankAccount().getCard().getBalance().subtract(BigDecimal.valueOf(amount)));
+                reciever.getBankAccount().getCard().setBalance(reciever.getBankAccount().getCard().getBalance().add(BigDecimal.valueOf(amount)));
             }
             cardRepository.save(sender.getBankAccount().getCard());
             cardRepository.save(reciever.getBankAccount().getCard());
@@ -177,10 +178,10 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Override
     public void createDeposite(int sum,Principal principal){
         User user = userService.getUserByPrincipal(principal);
-        if (user.getBankAccount().getCard().getBalance() - sum < 0 ) {
+        if (user.getBankAccount().getCard().getBalance().subtract(BigDecimal.valueOf(sum)).compareTo(BigDecimal.ZERO) < 0) {
             throw new NotEnoughMoneyException("It is not enough money in tours account");
         }else {
-            user.getBankAccount().getCard().setBalance(user.getBankAccount().getCard().getBalance() - sum );
+            user.getBankAccount().getCard().setBalance(user.getBankAccount().getCard().getBalance().subtract(BigDecimal.valueOf(sum)) );
             Deposite deposite = new Deposite();
             deposite.setSum(sum);
             deposite.setTerm(12);
@@ -223,8 +224,8 @@ public class BankAccountServiceImpl implements BankAccountService {
                 }
                 if (user.getBankAccount().getDeposite().getTerm() == 0) {
                     Card card = user.getBankAccount().getCard();
-                    card.setBalance(card.getBalance() +
-                            user.getBankAccount().getDeposite().getSum());
+                    card.setBalance(card.getBalance().add(
+                            BigDecimal.valueOf(user.getBankAccount().getDeposite().getSum())));
                     cardRepository.save(user.getBankAccount().getCard());
                     user.getBankAccount().getDeposite().setActive(false);
                     depositeRepository.save(user.getBankAccount().getDeposite());

@@ -8,6 +8,7 @@ import org.hibernate.annotations.Check;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -41,7 +42,7 @@ public class Card {
     //баланс карты
     @Column(nullable = false)
     @Check(constraints = "balance > 0")
-    private double balance;
+    private BigDecimal balance;
 
     //статус
     @Column(nullable = false,columnDefinition = "boolean default true")
@@ -54,7 +55,7 @@ public class Card {
     @PrePersist
     protected void onCreate() {
         this.expirationDate = LocalDateTime.now().plusYears(1);
-        this.balance = 0;
+        this.balance = BigDecimal.valueOf(0);
     }
 
     public boolean getActive() {

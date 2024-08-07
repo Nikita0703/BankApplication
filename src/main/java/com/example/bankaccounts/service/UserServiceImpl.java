@@ -190,20 +190,7 @@ public class UserServiceImpl implements UserService{
                 .collect(Collectors.toList()));
     }
 
-   // @Override
-    @Transactional
-    public synchronized void transferMoney(SendMoneyRequest request, Long for_id, Principal principal){
-        int amount = request.getAmount();
-        User sender = getUserByPrincipal(principal);
-        User reciever = userRepository.findUserById(for_id).orElse(null);
-        if (sender.getBankAccount().getCard().getBalance() - amount < 0 ) {
-            throw new NotEnoughMoneyException("It is not enough money in tours account");
-        }else {
-            sender.getBankAccount().getCard().setBalance(sender.getBankAccount().getCard().getBalance() - amount);
-            reciever.getBankAccount().getCard().setBalance(reciever.getBankAccount().getCard().getBalance() + amount);
-        }
 
-    }
 
     public UserDTO getUserDTOByPrincipal(Principal principal) {
         String username = principal.getName();
