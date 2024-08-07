@@ -73,21 +73,39 @@ public class BankAccountServiceImpl implements BankAccountService {
         this.mailSender = mailSender;
     }
 
+    /**
+     * Поиск по id.
+     *
+     * @param id id аккаунта
+     * @return Пользователя
+     */
     @Override
-   public UserDTO getUserByAccount(int id){
+    public UserDTO getUserByAccount(int id){
         BankAccount bankAccount = bankAccountRepository.findById(id).orElse(null);;
         BankAccountDTO bankAccountDTO = bankAccountMapper.toFullBankAccountDTO(bankAccount);
         return bankAccountDTO.getUser();
-   }
+    }
 
-   @Override
-   public BankAccountDTO getAccountByUser(Principal principal){
+    /**
+     * Получение банковского аккаунта пользователя.
+     *
+     * @param principal текущий пользователь
+     * @return банковский аккаунт
+     */
+    @Override
+    public BankAccountDTO getAccountByUser(Principal principal){
         UserDTO userDTO = userService.getUserDTOByPrincipal(principal);
         return userDTO.getBankAccountDTO();
-   }
+    }
 
+    /**
+     * Создание карты текущему пользователю.
+     *
+     * @param principal текущий пользователь
+     *
+     */
     @Override
-   public void createCard(Principal principal){
+    public void createCard(Principal principal){
         User user = userService.getUserByPrincipal(principal);
         Card card = new Card();
         Random rand = new Random();
@@ -101,14 +119,27 @@ public class BankAccountServiceImpl implements BankAccountService {
         user.getBankAccount().setCard(card);
         cardRepository.save(card);
         bankAccountRepository.save(user.getBankAccount());
-   }
+    }
 
+
+    /**
+     * Получение карты пользователя.
+     *
+     * @param principal текущий пользователь
+     * @return карта
+     */
     @Override
     public CardDTO getCardByUser(Principal principal){
         UserDTO userDTO = userService.getUserDTOByPrincipal(principal);
         return userDTO.getBankAccountDTO().getCard();
     }
 
+    /**
+     * Поиск пользователя админисмтратором по номеру карты.
+     *
+     * @param cardNumber номер карты
+     * @return пользователь
+     */
     @Override
     public UserDTO getUserByCard(int cardNumber){
         Optional<Card> cardOptional = cardRepository.findByCardNumber(cardNumber);
@@ -117,6 +148,13 @@ public class BankAccountServiceImpl implements BankAccountService {
         return user;
     }
 
+    /**
+     * Положить деньги на счет.
+     *
+     * @param sum суммма
+     * @param principal текущий пользователь
+     *
+     */
     @Override
     public void putMoneyOnCard(int sum,Principal principal){
         User user = userService.getUserByPrincipal(principal);
@@ -129,6 +167,14 @@ public class BankAccountServiceImpl implements BankAccountService {
         }
     }
 
+    /**
+     * Перевод денег.
+     *
+     * @param request запрос на перевод
+     * @param cardNumber номер карты
+     * @param principal текущий пользователь
+     *
+     */
     @Override
     @Transactional
     public synchronized void transferMoney(SendMoneyRequest request, int cardNumber, Principal principal){
@@ -169,12 +215,25 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    /**
+     * Получение истории трансферов.
+     *
+     * @param principal текущий пользователь
+     * @return список операций
+     */
     @Override
     public List<HistoryItemDTO>getHistory(Principal principal){
         User user = userService.getUserByPrincipal(principal);
         return  historyItemMapper.toHistoryItemDTOList(user.getBankAccount().getHistoryItems());
     }
 
+    /**
+     * Создание депозита.
+     *
+     * @param sum сумма
+     * @param principal текущий пользователь
+     *
+     */
     @Override
     public void createDeposite(int sum,Principal principal){
         User user = userService.getUserByPrincipal(principal);
@@ -198,6 +257,13 @@ public class BankAccountServiceImpl implements BankAccountService {
         }
     }
 
+
+    /**
+     * Поиск пользователя админисмтратором по номеру депозита.
+     *
+     * @param id номер депозита
+     * @return пользователь
+     */
     @Override
     public UserDTO getUserByDeposite(int id){
         Optional<Deposite> depositeOptional = depositeRepository.findById(id);
@@ -206,12 +272,14 @@ public class BankAccountServiceImpl implements BankAccountService {
         return user;
     }
 
+    /**
+     * Повышение суммы на депозите.
+     */
     @Override
     @Scheduled(fixedRate = 600000)
     public void increaseBalance() {
         List<User> users = userRepository.findAll();
 
-        int i = 0;
         for (User user : users) {
             if(user.getBankAccount().getDeposite()!=null && user.getBankAccount().getDeposite().getActive()) {
                 if (user.getBankAccount().getDeposite().getTerm() > 0) {
@@ -235,6 +303,13 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     }
 
+    /**
+     * Подтверждение для создания депозита.
+     *
+     * @param activationCode активационный код
+     * @param principal текущий пользователь
+     * @return сообщение
+     */
     @Override
     public MessageResponse approveDeposite(int activationCode,Principal principal){
         User user = userService.getUserByPrincipal(principal);
@@ -246,6 +321,13 @@ public class BankAccountServiceImpl implements BankAccountService {
         }
     }
 
+    /**
+     * Отправака сообщения с активационным кодом на почту.
+     *
+     * @param userEmail почта пользователя
+     * @param activationCode активационный код
+     *
+     */
     @Override
     public void sendEmailMessage(String userEmail,int activationCode) {
         String messageText = String.format(ApplicationConstants.EmailMessage+"%d", activationCode);
@@ -258,6 +340,10 @@ public class BankAccountServiceImpl implements BankAccountService {
         mailSender.send(messageToActivateUser);
     }
 
+
+    /**
+     * Проверка карты на experationdate.
+     */
     @Override
     @Scheduled(fixedRate = 600000)
     public void CheckCardIsActive() {
