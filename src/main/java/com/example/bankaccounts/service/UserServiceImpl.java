@@ -17,6 +17,7 @@ import com.example.bankaccounts.repository.PhonesRepository;
 import com.example.bankaccounts.repository.UserRepository;
 
 import com.example.bankaccounts.security.JWTTokenProvider;
+import com.example.bankaccounts.utils.ApplicationConstants;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService{
         user.setPersonalInfo(personalInfoMapper.toPersonalInfo(userDTO.getPersonalInfoDTO()));
         bankAccount.setUser(user);
         bankAccountRepository.save(bankAccount);
-        log.info("добавлен успешно");
+        log.info(ApplicationConstants.AddSuccess);
         userRepository.save(user);
     }
 
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService{
     public void addTelephoneNumber(String string, Principal principal){
         User user = getUserByPrincipal(principal);
         user.getPhones().add(string);
-        log.info("добавлен успешно");
+        log.info(ApplicationConstants.AddSuccess);
         userRepository.save(user);
     }
 
@@ -85,7 +86,7 @@ public class UserServiceImpl implements UserService{
     public void addEmail(String string,Principal principal){
         User user = getUserByPrincipal(principal);
         user.getEmails().add(string);
-        log.info("добавлен успешно");
+        log.info(ApplicationConstants.AddSuccess);
         userRepository.save(user);
     }
 
@@ -99,10 +100,10 @@ public class UserServiceImpl implements UserService{
         }
         user.getPhones().clear();
         if (phones.contains(phone)) {
-            log.warn("Phone with value already exists in the list");
-            throw new PhoneExistsException("Phone with value already exists in the list.");
+            log.warn(ApplicationConstants.PhoneExists);
+            throw new PhoneExistsException(ApplicationConstants.PhoneExists);
         }else {
-            log.info("изменен успешно");
+            log.info(ApplicationConstants.AddSuccess);
             user.getPhones().add(phone);
             userRepository.save(user);
         }
@@ -119,10 +120,10 @@ public class UserServiceImpl implements UserService{
             phones.add(phonetemp.getEmails());
         }
         if (phones.contains(email)) {
-            log.warn("Email with value already exists in the list.");
-            throw new PhoneExistsException("Email with value already exists in the list.");
+            log.warn(ApplicationConstants.EmailExists);
+            throw new PhoneExistsException(ApplicationConstants.EmailExists);
         }else {
-            log.info("изменен успешно");
+            log.info(ApplicationConstants.AddSuccess);
             user.getEmails().add(email);
             userRepository.save(user);
         }
@@ -133,10 +134,10 @@ public class UserServiceImpl implements UserService{
         User user = getUserByPrincipal(principal);
         Set<String> phones1 = user.getPhones();
         if (phones1.size() ==  1) {
-            log.warn("It is yours last phone you cuoldnt remove it");
-            throw new LastPhoneException("It is yours last phone you cuoldnt remove it");
+            log.warn(ApplicationConstants.LastPhone);
+            throw new LastPhoneException(ApplicationConstants.LastPhone);
         }else {
-            log.info("Удален успешно");
+            log.info(ApplicationConstants.AddSuccess);
             user.getPhones().removeIf(phone1 -> phone1.equals(phone));
             userRepository.save(user);
         }
@@ -147,10 +148,10 @@ public class UserServiceImpl implements UserService{
         User user = getUserByPrincipal(principal);
         Set<String> phones1 = user.getEmails();
         if (phones1.size() ==  1) {
-            log.warn("It is yours last email you cuoldnt remove it");
-            throw new LastEmailException("It is yours last email you cuoldnt remove it");
+            log.warn(ApplicationConstants.LastEmail);
+            throw new LastEmailException(ApplicationConstants.LastEmail);
         }else {
-            log.info("Удален успешно");
+            log.info(ApplicationConstants.AddSuccess);
             user.getEmails().removeIf(email1 -> email1.equals(email));
             userRepository.save(user);
         }
@@ -170,7 +171,7 @@ public class UserServiceImpl implements UserService{
         return userMapper.toUserDTOFull(users.stream()
                 .filter(user -> user.getPhones().contains(phone))
                 .findFirst()
-                .orElseThrow(() ->new PhoneExistsException("The phone doesn't exist")));
+                .orElseThrow(() ->new PhoneExistsException(ApplicationConstants.PhoneExists)));
     }
 
     @Override
@@ -179,7 +180,7 @@ public class UserServiceImpl implements UserService{
         return userMapper.toUserDTOFull(users.stream()
                 .filter(user -> user.getEmails().contains(email))
                 .findFirst()
-                .orElseThrow(()->new EmailExistsException("The email doesn't exist")));
+                .orElseThrow(()->new EmailExistsException(ApplicationConstants.EmailExists)));
     }
 
     @Override
@@ -195,7 +196,7 @@ public class UserServiceImpl implements UserService{
     public UserDTO getUserDTOByPrincipal(Principal principal) {
         String username = principal.getName();
         User user =  userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found with username " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(ApplicationConstants.UsernameNotFound + username));
         return userMapper.toUserDTOFull(user);
     }
 
@@ -203,7 +204,7 @@ public class UserServiceImpl implements UserService{
     public User getUserByPrincipal(Principal principal) {
         String username = principal.getName();
         User user =  userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found with username " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(ApplicationConstants.UsernameNotFound+ username));
         return user;
     }
 

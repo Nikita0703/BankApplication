@@ -22,4 +22,12 @@ public class ApplicationConstants {
     public static final String Sublect = "Активационный код";
 
     public static final String BaseUrl = "https://api.nbrb.by/exrates/rates/";
+
+    public static final String AddSuccess = "добвален успешно";
+
+    public static final String UsernameNotFound = "Username not found with username";
+
+    public static final String Send = "send money on the cardNumber";
+
+    public static final String Recieve = "recieved money from the cardNumber";
 }

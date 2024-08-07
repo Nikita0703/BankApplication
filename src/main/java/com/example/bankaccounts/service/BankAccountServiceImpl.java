@@ -125,7 +125,7 @@ public class BankAccountServiceImpl implements BankAccountService {
             user.getBankAccount().getCard().setBalance(currentBalance.add(BigDecimal.valueOf(sum)));
             cardRepository.save(user.getBankAccount().getCard());
         }else {
-            throw new CardNotActiveException("you dont have card or it is does not active");
+            throw new CardNotActiveException(ApplicationConstants.CardNotActive);
         }
     }
 
@@ -137,13 +137,13 @@ public class BankAccountServiceImpl implements BankAccountService {
         Optional<Card> cardOptional = cardRepository.findByCardNumber(cardNumber);
         Card card = cardOptional.orElseThrow(() -> new CardNotExistsExseption(ApplicationConstants.CardNotExists));
         if(sender.getBankAccount().getCard()==null){
-            throw new CardNotActiveException("you dont have card or it is does not active");
+            throw new CardNotActiveException(ApplicationConstants.CardNotActive);
         }
         User reciever = card.getBankAccount().getUser();
 
         if(sender.getBankAccount().getCard().getActive()) {
            if (sender.getBankAccount().getCard().getBalance().subtract(BigDecimal.valueOf(amount)).compareTo(BigDecimal.ZERO) < 0){
-                throw new NotEnoughMoneyException("It is not enough money in tours account");
+                throw new NotEnoughMoneyException(ApplicationConstants.NotEnoughMoney);
             } else {
                 sender.getBankAccount().getCard().setBalance(sender.getBankAccount().getCard().getBalance().subtract(BigDecimal.valueOf(amount)));
                 reciever.getBankAccount().getCard().setBalance(reciever.getBankAccount().getCard().getBalance().add(BigDecimal.valueOf(amount)));
@@ -154,18 +154,18 @@ public class BankAccountServiceImpl implements BankAccountService {
             HistoryItem senderHistoryItem = new HistoryItem();
             senderHistoryItem.setSum(amount);
             senderHistoryItem.setCreationDate(LocalDateTime.now());
-            senderHistoryItem.setDescription("send money on the cardNumber" + reciever.getBankAccount().getCard().getCardNumber());
+            senderHistoryItem.setDescription(ApplicationConstants.Send + reciever.getBankAccount().getCard().getCardNumber());
             sender.getBankAccount().getHistoryItems().add(senderHistoryItem);
             bankAccountRepository.save(sender.getBankAccount());
 
             HistoryItem recieverHistoryItem = new HistoryItem();
             recieverHistoryItem.setSum(amount);
             recieverHistoryItem.setCreationDate(LocalDateTime.now());
-            recieverHistoryItem.setDescription("recieved money from the cardNumber" + sender.getBankAccount().getCard().getCardNumber());
+            recieverHistoryItem.setDescription(ApplicationConstants.Recieve + sender.getBankAccount().getCard().getCardNumber());
             reciever.getBankAccount().getHistoryItems().add(senderHistoryItem);
             bankAccountRepository.save(reciever.getBankAccount());
         } else {
-            throw new CardNotActiveException("you dont have card or it is does not active");}
+            throw new CardNotActiveException(ApplicationConstants.CardNotActive);}
 
     }
 
@@ -179,7 +179,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     public void createDeposite(int sum,Principal principal){
         User user = userService.getUserByPrincipal(principal);
         if (user.getBankAccount().getCard().getBalance().subtract(BigDecimal.valueOf(sum)).compareTo(BigDecimal.ZERO) < 0) {
-            throw new NotEnoughMoneyException("It is not enough money in tours account");
+            throw new NotEnoughMoneyException(ApplicationConstants.NotEnoughMoney);
         }else {
             user.getBankAccount().getCard().setBalance(user.getBankAccount().getCard().getBalance().subtract(BigDecimal.valueOf(sum)) );
             Deposite deposite = new Deposite();
