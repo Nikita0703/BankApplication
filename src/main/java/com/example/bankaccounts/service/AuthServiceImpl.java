@@ -16,6 +16,12 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final JWTTokenProvider jwtTokenProvider;
 
+    /**
+     * Приходит loginrequest с паролем и именем пользователя для автоизации.
+     *
+     * @param loginRequest запрос на авторизацию
+     * @return токен
+     */
     @Override
     public String auth(LoginRequest loginRequest){
         Authentication authentication = authenticationManager

@@ -39,13 +39,17 @@ public class UserServiceImpl implements UserService{
     private final EmailsRepository emailsRepository;
     private final BankAccountRepository bankAccountRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final BankAccountMapper bankAccountMapper;
     private final UserMapper userMapper;
     private final PersonalInfoMapper personalInfoMapper;
-    private final BankAccountServiceImpl bankAccountService;
 
     public static final Logger log = LoggerFactory.getLogger(JWTTokenProvider.class);
 
+    /**
+     * Создание пользователя.
+     *
+     * @param userDTO данные пользователя
+     *
+     */
     @Override
     @Transactional
     public void createUserFromDTO(UserDTO userDTO){
@@ -68,11 +72,23 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
 
+    /**
+     * Сохранение пользователя в бд.
+     *
+     * @param user данные пользователя
+     *
+     */
     @Override
     public void createUser(User user){
         userRepository.save(user);
     }
 
+    /**
+     * Добавление пользователем еще одного телефона.
+     *
+     * @param string номер
+     * @param principal текущий пользователь
+     */
     @Override
     @Transactional
     public void addTelephoneNumber(String string, Principal principal){
@@ -82,6 +98,12 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
 
+    /**
+     * Добавление пользователем еще одной почты.
+     *
+     * @param string почта
+     * @param principal текущий пользователь
+     */
     @Override
     public void addEmail(String string,Principal principal){
         User user = getUserByPrincipal(principal);
@@ -90,6 +112,12 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
 
+    /**
+     * Изменение пользователем номера телефона.
+     *
+     * @param phone номер
+     * @param principal текущий пользователь
+     */
     @Override
     public void changePhone(String phone, Principal principal){
         User user = getUserByPrincipal(principal);
@@ -110,6 +138,12 @@ public class UserServiceImpl implements UserService{
 
     }
 
+    /**
+     * Изменение пользователем почты.
+     *
+     * @param email почта
+     * @param principal текущий пользователь
+     */
     @Override
     public void changeEmail(String email, Principal principal){
         User user = getUserByPrincipal(principal);
@@ -129,6 +163,12 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    /**
+     * Удаление пользователем номера телефона.
+     *
+     * @param phone номер
+     * @param principal текущий пользователь
+     */
     @Override
     public void deletePhone(String phone, Principal principal){
         User user = getUserByPrincipal(principal);
@@ -143,6 +183,12 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    /**
+     * Удаление пользователем почты.
+     *
+     * @param email почта
+     * @param principal текущий пользователь
+     */
     @Override
     public void deleteEmail(String email, Principal principal){
         User user = getUserByPrincipal(principal);
@@ -157,6 +203,12 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    /**
+     * Фильтрация по дню рождения.
+     *
+     * @param birthday дата для сравнения
+     * @return список пользователей
+     */
     @Override
     public List<UserDTO> filterByBirthday(LocalDateTime birthday){
         List<User> users= userRepository.findAll();
@@ -165,6 +217,12 @@ public class UserServiceImpl implements UserService{
                 .collect(Collectors.toList()));
     }
 
+    /**
+     * Поиск по номеру телефлна.
+     *
+     * @param phone номер
+     * @return пользователь
+     */
     @Override
     public UserDTO findByPhone(String phone){
         List<User> users= userRepository.findAll();
@@ -174,6 +232,12 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() ->new PhoneExistsException(ApplicationConstants.PhoneExists)));
     }
 
+    /**
+     * Поиск по почте.
+     *
+     * @param email почта
+     * @return пользователь
+     */
     @Override
     public UserDTO findByEmail(String email){
         List<User> users= userRepository.findAll();
@@ -183,6 +247,12 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(()->new EmailExistsException(ApplicationConstants.EmailExists)));
     }
 
+    /**
+     * Поиск like форматом по имени и фамилии.
+     *
+     * @param fio строка для поиска
+     * @return список пользователей
+     */
     @Override
     public List<UserDTO> findByFio(String fio){
         List<User> users= userRepository.findAll();
@@ -192,7 +262,12 @@ public class UserServiceImpl implements UserService{
     }
 
 
-
+    /**
+     * Получение пользователя DTO по principal.
+     *
+     * @param principal аутентифицированный субъект
+     * @return пользователь DTO
+     */
     public UserDTO getUserDTOByPrincipal(Principal principal) {
         String username = principal.getName();
         User user =  userRepository.findUserByUsername(username)
@@ -200,6 +275,12 @@ public class UserServiceImpl implements UserService{
         return userMapper.toUserDTOFull(user);
     }
 
+    /**
+     * Получение пользователя по principal.
+     *
+     * @param principal аутентифицированный субъект
+     * @return пользовател
+     */
     @Override
     public User getUserByPrincipal(Principal principal) {
         String username = principal.getName();
@@ -208,6 +289,12 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
+    /**
+     * Получение пользователя по username.
+     *
+     * @param username ник пользователя
+     * @return пользовател
+     */
     @Override
     public User getUserByUsername(String username){
         Optional<User> optionalUser = userRepository.findUserByUsername(username);

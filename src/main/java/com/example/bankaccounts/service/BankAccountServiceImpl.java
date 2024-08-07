@@ -41,13 +41,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     public static final Logger log = LoggerFactory.getLogger(JWTTokenProvider.class);
     @Value("${mail.username}")
     private String emailFrom;
-
     private final BankAccountRepository bankAccountRepository;
     private final UserRepository userRepository;
     private final BankAccountMapper bankAccountMapper;
     private final UserServiceImpl userService;
     private final CardRepository cardRepository;
-    private final CardMapper cardMapper;
     private final HistoryItemMapper historyItemMapper;
     private final DepositeRepository depositeRepository;
 
@@ -67,7 +65,6 @@ public class BankAccountServiceImpl implements BankAccountService {
         this.bankAccountRepository = bankAccountRepository;
         this.userRepository = userRepository;
         this.cardRepository = cardRepository;
-        this.cardMapper = cardMapper;
         this.historyItemMapper = historyItemMapper;
         this.depositeRepository = depositeRepository;
         this.mailSender = mailSender;
