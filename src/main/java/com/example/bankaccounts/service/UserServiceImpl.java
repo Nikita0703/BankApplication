@@ -300,4 +300,14 @@ public class UserServiceImpl implements UserService{
         Optional<User> optionalUser = userRepository.findUserByUsername(username);
         return optionalUser.get();
     }
+
+    /**
+     * Подсчет пользователей системы
+     * @return количество пользователей
+     */
+    @Override
+    public int countUsers(){
+        return userRepository.findUserCount();
+    }
+
 }

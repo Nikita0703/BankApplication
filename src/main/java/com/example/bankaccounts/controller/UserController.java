@@ -131,19 +131,7 @@ public interface UserController {
     @GetMapping(value = "/fio",produces = { "application/json" })
     public ResponseEntity<Object>  findByFio(@Parameter(in = ParameterIn.QUERY, description = "Данные для поиска" ,required=true,schema=@Schema(implementation = String.class))@RequestParam("fio")String fio);
 
+    @GetMapping(value = "/count",produces = { "application/json" })
+    public ResponseEntity<Object>  findAmountOfUsers();
 
-    /*
-    @Operation(summary = "Transfer monyy from 1 account to another", description = "Get the amount of money and id of user who will get it ", tags={ "transfer" })
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
-
-            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-
-            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
-    @PutMapping(value = "/transfer/{id}",produces = { "application/json" })
-    public ResponseEntity<Object> transfer(@Parameter( description = "The amount of money request", required=true, schema=@Schema(implementation = SendMoneyRequest.class))@Valid @RequestBody SendMoneyRequest request,
-                                           @Parameter(in = ParameterIn.PATH, description = "The id who will get money" ,required=true,schema=@Schema(implementation = Long.class))@PathVariable("id") Long id,
-                                           BindingResult bindingResult,
-                                           Principal principal);
-    */
 }

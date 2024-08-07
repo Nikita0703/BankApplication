@@ -48,4 +48,5 @@ public interface UserService {
 
     public User getUserByUsername(String username);
 
+    public int countUsers();
 }

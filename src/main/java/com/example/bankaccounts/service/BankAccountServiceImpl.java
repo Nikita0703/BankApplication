@@ -12,6 +12,7 @@ import com.example.bankaccounts.exception.NotEnoughMoneyException;
 import com.example.bankaccounts.mapper.BankAccountMapper;
 import com.example.bankaccounts.mapper.CardMapper;
 import com.example.bankaccounts.mapper.HistoryItemMapper;
+import com.example.bankaccounts.mapper.UserMapper;
 import com.example.bankaccounts.payload.request.SendMoneyRequest;
 import com.example.bankaccounts.payload.response.MessageResponse;
 import com.example.bankaccounts.repository.BankAccountRepository;
@@ -48,7 +49,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     private final CardRepository cardRepository;
     private final HistoryItemMapper historyItemMapper;
     private final DepositeRepository depositeRepository;
-
+    private final UserMapper userMapper;
     private final MailSender mailSender;
 
     public BankAccountServiceImpl(@Lazy UserServiceImpl userService,
@@ -59,6 +60,7 @@ public class BankAccountServiceImpl implements BankAccountService {
                                   CardMapper cardMapper,
                                   HistoryItemMapper historyItemMapper,
                                   DepositeRepository depositeRepository,
+                                  UserMapper userMapper,
                                   MailSender mailSender){
         this.userService = userService;
         this.bankAccountMapper = bankAccountMapper;
@@ -67,6 +69,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         this.cardRepository = cardRepository;
         this.historyItemMapper = historyItemMapper;
         this.depositeRepository = depositeRepository;
+        this.userMapper = userMapper;
         this.mailSender = mailSender;
     }
 
@@ -358,5 +361,25 @@ public class BankAccountServiceImpl implements BankAccountService {
             }
         }
 
+    }
+
+    /**
+     * Поиск польззвактля с мин балансом.
+     * @return пользовател
+     */
+    @Override
+    public UserDTO findUserWithMinBalance(){
+        Optional<Card> cardOptional = cardRepository.findCardWithMinBalance();
+        Card card = cardOptional.orElseThrow(() -> new CardNotExistsExseption(ApplicationConstants.CardNotExists));
+        return userMapper.toUserDTOFull(card.getBankAccount().getUser());
+    }
+
+    /**
+     * Подсчет среднего згачения баланса пользователей.
+     * @return значение
+     */
+    @Override
+    public double findAverageBalanceOfUsers(){
+       return cardRepository.findAvgBalance();
     }
 }

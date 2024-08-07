@@ -107,4 +107,11 @@ public class UserControllerImpl implements UserController{
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Override
+    public ResponseEntity<Object>  findAmountOfUsers(){
+        int amount = userService.countUsers();
+        return new ResponseEntity<>(amount, HttpStatus.OK);
+    }
+
 }

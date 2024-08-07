@@ -14,6 +14,7 @@ import com.example.bankaccounts.service.UserService;
 import com.example.bankaccounts.validation.ResponseErrorValidation;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
@@ -104,5 +105,19 @@ public class BankAccountControllerImpl implements BankAccountController{
     @Override
     public Object approveDeposite(int activationCode,Principal principal){
        return bankAccountService.approveDeposite(activationCode,principal);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Override
+    public ResponseEntity<UserDTO>  findUserWithMinBalance(){
+        UserDTO userDTO = bankAccountService.findUserWithMinBalance();
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Override
+    public ResponseEntity<Double>  findAvgBalance(){
+        double amount = bankAccountService.findAverageBalanceOfUsers();
+        return new ResponseEntity<>(amount, HttpStatus.OK);
     }
 }

@@ -138,4 +138,12 @@ public interface BankAccountController {
 
     @PutMapping ("/approveDeposite")
     public Object approveDeposite(@RequestParam("code") int activationCode,Principal principal);
+
+    @GetMapping(value = "/findUserWithMinBalance",produces = { "application/json" })
+    public ResponseEntity<UserDTO>  findUserWithMinBalance();
+
+    @GetMapping(value = "/findAvgBalance",produces = { "application/json" })
+    public ResponseEntity<Double>  findAvgBalance();
+
+
 }
